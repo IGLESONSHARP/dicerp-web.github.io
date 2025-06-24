@@ -100,6 +100,7 @@ document.getElementById('no_ente').addEventListener('change', async (e) => {
                             <div class="column-header"></div>
                             <div class="column-header"></div>
                             <div class="column-header"></div>
+                            <div class="column-header"></div>
                             <div class="tooltip">
                                 
                                 <span class="tooltip-text"></span>
@@ -111,6 +112,7 @@ document.getElementById('no_ente').addEventListener('change', async (e) => {
       // ✅ Linhas da tabela
       resultadoData.forEach(item => {
         const fundo = item.ds_identificacao_ativo || '-';
+
         const mes = item.dt_mes
           ? numeroParaMes(item.dt_mes)
             : 'N/A';
@@ -121,6 +123,7 @@ document.getElementById('no_ente').addEventListener('change', async (e) => {
               currency: 'BRL'
             })
           : '-';
+        const toperacao = item.tp_operacao || '-';
 
         const row = document.createElement('div');
         row.classList.add('table-columns');
@@ -130,6 +133,7 @@ document.getElementById('no_ente').addEventListener('change', async (e) => {
           <div class="column-header">${mes}</div>
           <div class="column-header">${ano}</div>
           <div class="column-header">${valor}</div>
+          <div class="column-header">${toperacao}</div>
           
         `;
         tabela.appendChild(row);
