@@ -166,3 +166,15 @@
             background-color: #ddd;
             margin: 20px 0;
         }
+.icon-with-sides2 
+{
+    background-color: #ef0ff7; /* cor desejada */
+    border: none;
+    padding: 6px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 1s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
