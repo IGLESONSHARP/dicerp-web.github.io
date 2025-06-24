@@ -1,0 +1,11 @@
+svg { width: 100%; height: auto; }
+
+.municipio {
+    fill: #e61010;
+    stroke: #333;
+    cursor: pointer;
+    transition: fill .30s;
+}
+.municipio:hover {
+    fill: rgb(212, 236, 0);
+}

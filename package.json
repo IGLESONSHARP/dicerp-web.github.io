@@ -1,0 +1,24 @@
+{
+  "name": "cadprev",
+  "version": "1.0.0",
+  "main": "server.js",
+  
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "1. APLICAÇÃO WEB COM O USO DE API CADPREV 2. FRONTEND 3. BACKEND",
+  "dependencies": {
+    "axios": "^1.9.0",
+    "cors": "^2.8.5",
+    "d3-geo": "^3.1.1",
+    "express": "^5.1.0",
+    "node-fetch": "^3.3.2",
+    "topojson-client": "^3.1.0"
+
+  }
+}
