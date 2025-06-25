@@ -101,6 +101,7 @@ document.getElementById('no_ente').addEventListener('change', async (e) => {
                             <div class="column-header"></div>
                             <div class="column-header"></div>
                             <div class="column-header"></div>
+                            <div class="column-header"></div>
                             <div class="tooltip">
                                 
                                 <span class="tooltip-text"></span>
@@ -112,6 +113,7 @@ document.getElementById('no_ente').addEventListener('change', async (e) => {
       // ✅ Linhas da tabela
       resultadoData.forEach(item => {
         const fundo = item.ds_identificacao_ativo || '-';
+        
 
         const mes = item.dt_mes
           ? numeroParaMes(item.dt_mes)
@@ -124,6 +126,7 @@ document.getElementById('no_ente').addEventListener('change', async (e) => {
             })
           : '-';
         const toperacao = item.tp_operacao || '-';
+        const segmento = item.no_segmeto || '-';
 
         const row = document.createElement('div');
         row.classList.add('table-columns');
@@ -134,6 +137,7 @@ document.getElementById('no_ente').addEventListener('change', async (e) => {
           <div class="column-header">${ano}</div>
           <div class="column-header">${valor}</div>
           <div class="column-header">${toperacao}</div>
+          <div class="column-header">${segmento}</div>
           
         `;
         tabela.appendChild(row);
