@@ -1,5 +1,8 @@
 const monthlyData = {
-  labels: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'],
+  labels: ['Amazonprev', 'Barcelos', 'Barreirinha', 'Benjamin Constant', 'BERURI', 'BORBA', 'CAAPIRANGA',
+  'CANUTAMA', 'CARAURI', 'COARI', 'ENVIRA', 'FONTE BOA', 'HUMAITÁ', 'IRANDUBA',
+  'ITACOATIARA', 'LÁBREA', 'MANACAPURU', 'MANAQUIRI', 'MANAUS', 'MANICORÉ', 'MARAÃ',
+  'MAUÉS', 'NHAMUNDÁ', 'PRESIDENTE FIGUEIREDO', 'RIO PRETO DA EVA', 'TABATINGA', 'URUCARÁ'],
   datasets: [
     {
       label: 'Série 1',
@@ -25,12 +28,63 @@ const chartOptions = {
 const aplicacoesCtx = document.getElementById('aplicacoesChart').getContext('2d');
 const resgatesCtx = document.getElementById('resgatesChart').getContext('2d');
 
+
+const municipios = [
+  'Amazonprev', 'Barcelos', 'Barreirinha', 'Benjamin Constant', 'BERURI', 'BORBA', 'CAAPIRANGA',
+  'CANUTAMA', 'CARAURI', 'COARI', 'ENVIRA', 'FONTE BOA', 'HUMAITÁ', 'IRANDUBA',
+  'ITACOATIARA', 'LÁBREA', 'MANACAPURU', 'MANAQUIRI', 'MANAUS', 'MANICORÉ', 'MARAÃ',
+  'MAUÉS', 'NHAMUNDÁ', 'PRESIDENTE FIGUEIREDO', 'RIO PRETO DA EVA', 'TABATINGA', 'URUCARÁ'
+];
+
+// Exemplo: valores simulados aleatórios
+const valores = municipios.map(() => Math.floor(Math.random() * 5000) + 1000);
+
+// Cores diferentes para cada barra
+const cores = municipios.map((_, i) => `hsl(${i * 13}, 70%, 50%)`);
+/*aplicações*/
 const aplicacoesChart = new Chart(aplicacoesCtx, {
-  type: 'line',
+  type: 'bar',
   data: {
-    labels: ['Amazonprev', 'Barcelos', 'Barreirinha', 'Benjamin Constant']
+    labels: municipios,
+    datasets: [{
+      label: 'VALORES EM REAIS',
+      data: valores,
+      backgroundColor: cores,
+      borderColor: '#333',
+      borderWidth: 1
+    }]
   },
-  options: chartOptions
+  options: {
+    responsive: true,
+    scales: {
+      y: {
+        beginAtZero: true,
+        title: {
+          display: true,
+          text: 'Operação (R$)'
+        }
+      },
+      x: {
+        title: {
+          display: true,
+          text: 'Municípios'
+        },
+        ticks: {
+          autoSkip: false,
+          maxRotation: 90,
+          minRotation: 45
+        }
+      }
+    },
+    plugins: {
+      legend: {
+        display: true
+      },
+      tooltip: {
+        mode: 'index'
+      }
+    }
+  }
 });
 
 const redemptionsData = {
@@ -40,9 +94,48 @@ const redemptionsData = {
     data: ds.data.map(value => value * 0.8 + Math.random() * 500)
   }))
 };
-
-const resgatesChart = new Chart(resgatesCtx, {
-  type: 'line',
-  data: redemptionsData,
-  options: chartOptions
+/*resgates*/
+const resgatesChartChart = new Chart(resgatesCtx, {
+  type: 'bar',
+  data: {
+    labels: municipios,
+    datasets: [{
+      label: 'VALORES EM REAIS',
+      data: valores,
+      backgroundColor: cores,
+      borderColor: '#333',
+      borderWidth: 1
+    }]
+  },
+  options: {
+    responsive: true,
+    scales: {
+      y: {
+        beginAtZero: true,
+        title: {
+          display: true,
+          text: 'Operação (R$)'
+        }
+      },
+      x: {
+        title: {
+          display: true,
+          text: 'Municípios'
+        },
+        ticks: {
+          autoSkip: false,
+          maxRotation: 90,
+          minRotation: 45
+        }
+      }
+    },
+    plugins: {
+      legend: {
+        display: true
+      },
+      tooltip: {
+        mode: 'index'
+      }
+    }
+  }
 });
