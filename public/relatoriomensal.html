@@ -1,23 +1,285 @@
-<canvas id="graficoAno"></canvas>
-<script>
-  const ctx = document.getElementById('graficoAno').getContext('2d');
-  const dados = [
-    { dt_ano: 2021, vl_operacao: 50000 },
-    { dt_ano: 2022, vl_operacao: 80000 },
-    { dt_ano: 2023, vl_operacao: 120000 }
-  ];
-  const anos = dados.map(d => d.dt_ano);
-  const valores = dados.map(d => d.vl_operacao);
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RELATÓRIO MENSAL</title>
+    <link rel="stylesheet" href="style/relatoriomensal.css">
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-item home ">
+            <span class="icon">           
+             <h1><a href="index.html" id="homeLink"><img src="theme/HOME.png" width="24" height="24" alt="Home" alt=""></a></h1>
+            </span>
+            <span class="label">Home</span>
+        </div>
+        <div class="sidebar-icons">
+            <a class="icon-with-sides" onclick="window.location.href='aplicacoesresgates.html'">
+                <div class="sidebar-item" style="margin-bottom: 20px;">
+                    <img src="theme/APRs.png" width="24" height="24" alt="Carteira">
+                    <span class="label">Aplicações e Resgates-APRs</span>
+                </div>
+            </a>
 
-  new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: anos,
-      datasets: [{
-        label: 'Valor das Operações',
-        data: valores,
-        backgroundColor: '#1a8c3a'
-      }]
-    }
-  });
-</script>
+            <a class="icon-with-sides" onclick="window.location.href='carteira.html'">
+                <div class="sidebar-item" style="margin-bottom: 20px;">
+                    <img src="theme/CARTEIRA.webp" width="24" height="24" alt="Carteira">
+                    <span class="label">Carteira</span>
+                </div>
+            </a>
+
+            <a class="icon-with-sides" onclick="window.location.href='fundos.html'">
+                <div class="sidebar-item" style="margin-bottom: 20px;">
+                    <img src="theme/INVESTIMENTOFUNDOS.png" width="24" height="24" alt="Fundos e Investimentos">
+                    <span class="label">Fundos e Investimentos</span>
+                </div>
+            </a>
+
+            <a class="icon-with-sides" onclick="window.location.href='governanca.html'">
+                <div class="sidebar-item" style="margin-bottom: 20px;">
+                    <img src="theme/GOVERNANCA.png" width="24" height="24" alt="Governança">
+                    <span class="label">Governança</span>
+                </div>
+            </a>
+            <a class="icon-with-sides" onclick="window.location.href='relatorios.html'">
+                <div class="sidebar-item" style="margin-bottom: 20px;">
+                    <img src="theme/RELATORIOS.png" width="24" height="24" alt="Governança">
+                    <span class="label">Relatórios</span>
+                </div>
+            </a>
+        </div>
+        <a href="https://cadprev.previdencia.gov.br/Cadprev/pages/index.xhtml" target="_blank" style="text-decoration: none;">
+            <div class="sidebar-item" style="margin-bottom: 20px;">
+                <img src="theme/BRASAO_FEDERAL.png" width="80" height="34" alt="BRASÃO FEDERAL">
+                <span class="label">CADPREV</span>
+            </div>
+        </a>
+        <a href="https://www2.tce.am.gov.br/" target="_blank" style="text-decoration: none;">
+            <div class="sidebar-item" style="margin-bottom: 20px;">
+                <img src="theme/BRASAO_ESTADUAL_TCE-AM.png" width="34" height="34" alt="Brasão do TCE-AM">
+                <span class="label">Tribunal de Contas do Estado do Amazonas</span>
+            </div>
+        </a>
+        </div>
+    </div>
+    <div class="main-content">
+        <div class="header">
+            <div class="form-group">
+            <label for="no_ente"></label>
+            <form id="form3" class="bottom-group">
+                <select name="dt_mes" id="">
+                    <option value="">ESCOLHA UM MÊS</option>
+                    <option value="1">Janeiro</option>
+                    <option value="2">Fevereiro</option>
+                    <option value="3">Março</option>
+                    <option value="4">Abril</option>
+                    <option value="5">Maio</option>
+                    <option value="6">Junho</option>
+                    <option value="7">Julho</option>
+                    <option value="8">Agosto</option>
+                    <option value="9">Setembro</option>
+                    <option value="10">Outubro</option>
+                    <option value="11">Novembro</option>
+                    <option value="12">Dezembro</option>
+                </select>
+                <select name="dt_ano" id="">
+                    <option value="">ESCOLHA UM ANO</option>
+                    <option value="2020">2020</option>
+                    <option value="2021">2021</option>
+                    <option value="2023">2022</option>
+                    <option value="2023">2023</option>
+                    <option value="2024">2024</option>
+                    <option value="2025">2025</option>
+     
+                </select>
+                
+            </form>
+          </div>
+        </div>
+
+        <!-- Adicione este bloco DENTRO da div .main-content, logo após a .header -->
+    <div class="button-group-left">
+        <span class="destaque">RELATÓRIO MENSAL</span>
+        <strong style="right: 500px;">
+            <button class="action-button">
+            <div class="sidebar-item with-tooltip">
+                <img src="theme/limparBusca.jfif" width="24" height="24" alt="Limpar busca">
+                <span class="button-label">Limpar busca</span>
+            </div>
+        </button>
+        <button class="action-button">
+            <div class="sidebar-item with-tooltip">
+                <img src="theme/EXPORTAR_EXCEL.webp" width="24" height="24" alt="Exportar xlsx">
+                <span class="button-label">Exportar Excel</span>
+            </div>
+        </button>
+        <button class="action-button">
+            <div class="sidebar-item with-tooltip">
+                <span class="button-label">Detalhes da busca</span>
+                <img src="theme/DETALHESBUSCA.png" width="24" height="24" alt="Detalhes da busca">
+            </div>
+        </button></strong>
+    </div>
+    <div class="main-content2">
+        <strong> </strong> <!--CNPJ E UF-->
+        <strong id="cnpj-container" class="main-content2"></strong>
+        <strong></strong>
+        <strong id="cnpj-container" class="main-content2"></strong>
+    </div>
+
+
+
+    <div class="main-content2">
+        <strong> </strong> <!--CNPJ E UF-->
+        <strong id="cnpj-container" class="main-content2"></strong>
+        <strong></strong>
+        <strong id="cnpj-container" class="main-content2"></strong>
+    </div>
+
+    
+
+        <div class="content">
+                <div class="content-header">
+                    <h2>APLICAÇÃO E RESGATE (MENSAL)</h2>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="left-panel">
+                        <div style="display: flex; align-items: flex-start; gap: 20px;">
+                            <div class="red-indicator"></div>
+                            <div style="flex: 1;">
+                                <div class="kpi-section">
+                                    <div class="kpi-item">
+                                        <div class="kpi-circle">
+                                            <span>1.247</span>
+                                        </div>
+                                        <div class="kpi-label">Número de operações</div>
+                                    </div>
+                                    <div class="kpi-item">
+                                        <div class="kpi-circle">
+                                            <span>R$ 2.5M</span>
+                                            <span class="button-label with-tooltip">Aplicação Inicial/Compra/Aporte ou vinculação de bens</span>
+                                        </div>
+                                        <div class="kpi-label">Aplicações</div>
+                                    </div>
+                                    <div class="kpi-item">
+                                        <div class="kpi-circle">
+                                            <span>R$ 1.8M</span>
+                                        </div>
+                                        <div class="kpi-label">Resgates</div>
+                                    </div>
+                                </div>
+
+                                <div class="charts-section">
+                                    <div class="chart-container">
+                                        <div class="chart-title">APLICAÇÕES</div>
+                                        
+                                        <div class="chart-placeholder tabela-resgate-aplicacao">
+                                            <form action="" >
+                                                <div>AMAZONPREV</div>
+                                                <div>BARCELOS</div>
+                                                <div>BARREIRINHA</div>
+                                                <div >BENJAMIN CONSTANT</div>
+                                                <div>BERURI</div>
+                                                <div>BORBA</div>
+                                                <div>CAAPIRANGA</div>
+                                                <div>CANUTAMA</div>
+                                                <div>CARAURI</div>
+                                                <div>COARI</div>
+                                                <div>ENVIRA</div>
+                                                <div>FONTE BOA</div>
+                                                <div>HUMAITÁ</div>
+                                                <div>IRANDUBA</div>
+                                                <div>ITACOATIARA</div>
+                                                <div>LÁBREA</div>
+                                                <div>MANACAPURU</div>
+                                                <div>MANAQUIRI</div>
+                                                <div>MANAUS</div>
+                                                <div>MANICORÉ</div>
+                                                <div>MARAÃ</div>
+                                                <div>MAUÉS</div>
+                                                <div>NHAMUNDÁ</div>
+                                                <div>PRESIDENTE FIGUEIREDO</div>
+                                                <div>RIO PRETO DA EVA</div>
+                                                <div>TABATINGA</div>
+                                                <div>URUCARÁ</div>
+                                                
+                                            </form>
+                                            <canvas id="topApplicationsChart" width="200" height="150"></canvas>
+                                        </div>
+                                    </div>
+                                    <div class="chart-container">
+                                        <div class="chart-title">RESGATES</div>
+                                        <div class="chart-placeholder tabela-resgate-aplicacao">
+                                            <form action="">
+                                                <div>AMAZONPREV</div>
+                                                <div>BARCELOS</div>
+                                                <div>BARREIRINHA</div>
+                                                <div >BENJAMIN CONSTANT</div>
+                                                <div>BERURI</div>
+                                                <div>BORBA</div>
+                                                <div>CAAPIRANGA</div>
+                                                <div>CANUTAMA</div>
+                                                <div>CARAURI</div>
+                                                <div>COARI</div>
+                                                <div>ENVIRA</div>
+                                                <div>FONTE BOA</div>
+                                                <div>HUMAITÁ</div>
+                                                <div>IRANDUBA</div>
+                                                <div>ITACOATIARA</div>
+                                                <div>LÁBREA</div>
+                                                <div>MANACAPURU</div>
+                                                <div>MANAQUIRI</div>
+                                                <div>MANAUS</div>
+                                                <div>MANICORÉ</div>
+                                                <div>MARAÃ</div>
+                                                <div>MAUÉS</div>
+                                                <div>NHAMUNDÁ</div>
+                                                <div>PRESIDENTE FIGUEIREDO</div>
+                                                <div>RIO PRETO DA EVA</div>
+                                                <div>TABATINGA</div>
+                                                <div>URUCARÁ</div>
+                                                
+                                                
+                                            </form>
+                                            <canvas id="topRedemptionsChart" width="200" height="150"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="right-panel">
+                        <div class="chart-panel">
+                            <h3>APLICAÇÕES</h3>
+                            <div id="grafico-container">
+                                <canvas id="aplicacoesChart" class="chart-canvas" width="600" height="300"></canvas>
+                            </div>
+                        </div>
+                        <div class="chart-panel">
+                            <h3>RESGATES</h3>
+                            <div id="grafico-container">
+                                <canvas id="resgatesChart" class="chart-canvas"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+          <!--GRAFICOS-->
+        </div>
+    </div>
+    <div class="footer-bar"></div>
+
+   <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>-->
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script src="script/relatoriomensal.js"></script>
+
+
+</body>
+</html>

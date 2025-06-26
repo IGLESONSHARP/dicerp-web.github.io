@@ -1,23 +1,55 @@
-<canvas id="graficoAno"></canvas>
-<script>
-  const ctx = document.getElementById('graficoAno').getContext('2d');
-  const dados = [
-    { dt_ano: 2021, vl_operacao: 50000 },
-    { dt_ano: 2022, vl_operacao: 80000 },
-    { dt_ano: 2023, vl_operacao: 120000 }
-  ];
-  const anos = dados.map(d => d.dt_ano);
-  const valores = dados.map(d => d.vl_operacao);
-
-  new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: anos,
-      datasets: [{
-        label: 'Valor das Operações',
-        data: valores,
-        backgroundColor: '#1a8c3a'
-      }]
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Gráfico de Barras</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    #grafico-container {
+      width: 600px;
+      margin: 40px auto;
     }
-  });
-</script>
+  </style>
+</head>
+<body>
+  <div id="grafico-container">
+    <canvas id="meuGrafico"></canvas>
+  </div>
+
+  <script>
+    const ctx = document.getElementById('meuGrafico').getContext('2d');
+
+    const meuGrafico = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Manaus', 'Coari', 'Itacoatiara', 'Manacapuru'], // Eixo X (strings)
+        datasets: [{
+          label: 'Quantidade de Processos',
+          data: [35, 20, 15, 50], // Eixo Y (valores inteiros)
+          backgroundColor: ['#2ecc71', '#3498db', '#e67e22', '#9b59b6'],
+          borderColor: '#333',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: 'Quantidade'
+            }
+          },
+          x: {
+            title: {
+              display: true,
+              text: 'Municípios'
+            }
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>
