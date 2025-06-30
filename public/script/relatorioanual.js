@@ -39,6 +39,7 @@ Chart.defaults.color = '#ffffff';
             }
             
         });
+const meses = ['Jan', 'Fev', 'Mar','Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
 
         // Gráfico de Resgate e Resgate (Pizza pequena)
         const rescueCtx = document.getElementById('rescueChart').getContext('2d');
@@ -69,7 +70,7 @@ Chart.defaults.color = '#ffffff';
         new Chart(barCtx1, {
             type: 'bar',
             data: {
-                labels: ['Jan', 'Fev', 'Mar','Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                labels: meses,
                 datasets: [{
                     data: [1200000, 980000, 750000, 1200000, 980000, 750000,1200000, 980000, 750000, 1200000, 980000, 750000],
                     borderColor: '#4a7c59',
@@ -103,14 +104,25 @@ Chart.defaults.color = '#ffffff';
                         
                     },
                     x: {
-                        grid: {
-                            display: true,
-                            title: 'Meses',
-                            data: monthlyData,
-                            
+                        title: {
+                        display: true,
+                        text: 'meses'
+                        },
+                        ticks: {
+                        autoSkip: false,
+                        maxRotation: 90,
+                        minRotation: 45
                         }
                     }
-                }
+                    },
+                    plugins: {
+                        legend: {
+                            display: true
+                        },
+                        tooltip: {
+                            mode: 'index'
+                        }
+                        }
             }
                 
         });
