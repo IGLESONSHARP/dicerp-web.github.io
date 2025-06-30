@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Fundos de Investimentos</title>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>-->
+    <style>
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="nav-item active">🏠</div>
+            <div class="nav-item">💰</div>
+            <div class="nav-item">💳</div>
+            <div class="nav-item">💸</div>
+            <div class="nav-item">🏛️</div>
+            <div class="nav-item">🎯</div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <h1>DICEPP TCE/AM</h1>
+                <div class="filters">
+                    <input type="text" class="filter-input" placeholder="INSIRA O ANO">
+                    <input type="text" class="filter-input" placeholder="INSIRA O MUNICÍPIO">
+                </div>
+            </div>
+
+            <!-- Dashboard Title -->
+            <div class="dashboard-title">FUNDOS DE INVESTIMENTOS</div>
+
+            <!-- Charts Grid -->
+            <div class="charts-grid">
+                <!-- Aplicações -->
+                <div class="chart-container">
+                    <div class="chart-title">APLICAÇÕES</div>
+                    <div class="red-chart">R$ 2.450.000</div>
+                </div>
+
+                <!-- Resgates -->
+                <div class="chart-container">
+                    <div class="chart-title">RESGATES</div>
+                    <div class="red-chart">R$ 1.850.000</div>
+                </div>
+
+                <!-- Segmento -->
+                <div class="chart-container segment-chart">
+                    <div class="chart-title">SEGMENTO</div>
+                    <div class="red-chart" style="height: 200px;">
+                        <canvas id="segmentChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Operações Anuais -->
+                <div class="chart-container operations-chart">
+                    <div class="chart-title">OPERAÇÕES ANUAIS</div>
+                    <canvas id="operationsChart"></canvas>
+                </div>
+
+                <!-- Resgate e Resgate -->
+                <div class="chart-container">
+                    <div class="chart-title">RESGATE E RESGATE</div>
+                    <canvas id="rescueChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Bar Charts -->
+            <div class="bar-charts">
+                <div class="bar-chart-container">
+                    <canvas id="barChart1"></canvas>
+                    <div class="values-display">
+                        <div class="value-item">
+                            <div class="value-number">R$ 1.2M</div>
+                            <div>Jan-Mar</div>
+                        </div>
+                        <div class="value-item">
+                            <div class="value-number">R$ 980K</div>
+                            <div>Abr-Jun</div>
+                        </div>
+                        <div class="value-item">
+                            <div class="value-number">R$ 750K</div>
+                            <div>Jul-Set</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bar-chart-container">
+                    <canvas id="barChart2"></canvas>
+                    <div class="values-display">
+                        <div class="value-item">
+                            <div class="value-number">R$ 1.8M</div>
+                            <div>Q1</div>
+                        </div>
+                        <div class="value-item">
+                            <div class="value-number">R$ 1.2M</div>
+                            <div>Q2</div>
+                        </div>
+                        <div class="value-item">
+                            <div class="value-number">R$ 890K</div>
+                            <div>Q3</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script></script>
+</body>
+</html>
