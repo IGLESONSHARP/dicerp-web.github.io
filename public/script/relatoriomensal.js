@@ -1,5 +1,9 @@
 /*API Servidor*/
-
+/*chamada somente municipios RPPS
+const municipios = ['Barcelos', 'Barreirinha', 'Benjamin Constant', 'Beruri', 'Borba', 'Caapiranga',
+  'Canutama', 'Carauari', 'Coari', 'Envira', 'Fonte Boa', 'Humaitá', 'Iranduba',
+  'Itacoatiara', 'Lábrea', 'Manacapuru', 'Manaquiri', 'Manaus', 'Manicoré', 'Maraã',
+  'Maués', 'Nnhamundá', 'Presidente Figueiredo', 'Rio Preto da Eva', 'Tabatinga', 'Urucará']*/
 document.querySelector('#form').addEventListener('submit', async (e) => {
   e.preventDefault();
 
