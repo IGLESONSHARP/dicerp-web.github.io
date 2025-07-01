@@ -64,7 +64,7 @@ const meses = ['Jan', 'Fev', 'Mar','Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Ou
             },
             
         });
-
+const cores = meses.map((_, i) => `hsl(${i * 13}, 70%, 50%)`);
         // Gráfico de barras 1
         const barCtx1 = document.getElementById('barChart1').getContext('2d');
         new Chart(barCtx1, {
@@ -74,7 +74,7 @@ const meses = ['Jan', 'Fev', 'Mar','Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Ou
                 datasets: [{
                     data: [1200000, 980000, 750000, 1200000, 980000, 750000,1200000, 980000, 750000, 1200000, 980000, 750000],
                     borderColor: '#4a7c59',
-                    backgroundColor: '#4FC3F7',
+                    backgroundColor: cores,
                     borderRadius: 12
                 }]
             },
@@ -132,11 +132,11 @@ const meses = ['Jan', 'Fev', 'Mar','Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Ou
         new Chart(barCtx2, {
             type: 'bar',
             data: {
-                labels: ['Q1', 'Q2', 'Q3'],
+                labels: meses,
                 datasets: [{
-                    data: [1800000, 1200000, 890000],
-                    backgroundColor: '#4FC3F7',
-                    borderRadius: 4
+                    data: [1800000, 1200000, 890000,1800000, 1200000, 890000,1800000, 1200000, 890000,1800000, 1200000, 890000,],
+                    backgroundColor: cores,
+                    borderRadius: 12
                 }]
             },
             options: {
@@ -144,7 +144,7 @@ const meses = ['Jan', 'Fev', 'Mar','Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Ou
                 maintainAspectRatio: false,
                 plugins: {
                     legend: {
-                        display: false
+                        display: true
                     }
                 },
                 scales: {

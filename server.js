@@ -92,6 +92,37 @@ app.get('/proxy/governanca', async (req, res) => {
     res.status(500).json({ error: 'Erro interno no servidor proxy' });
   }})
 // Inicia o servidor
+
+
+/*relatorio mensal(mes e ano)*/
+app.get('/proxy/aplicacoes/relatoriomensal', async (req, res) => {
+  console.log('Query recebida(RELATÓRIO MENSAL): ', req.query);
+  const { dt_mes, dt_ano } = req.query;
+  console.log('dt_mes:', dt_mes, '| dt_ano:', dt_ano);
+
+
+  if (!dt_mes || !dt_ano) {
+    return res.status(400).json({ 
+      error: `O parâmetro 'no_ente' e 'dt_ano' é obrigatório.`});
+  }
+
+  const baseUrl=`https://apicadprev.trabalho.gov.br/DAIR_APLICACOES_RESGATE`;
+  const params = new URLSearchParams({dt_mes, dt_ano});
+
+
+  const url =`${baseUrl}?${params.toString()}`;
+  console.log('URL FINAL', url);
+  try {
+    const response = await axios.get(url);
+    res.json(response.data);
+  } catch (error) {
+    console.error('Erro no proxy: ', error.message);
+    const statusCode = error.response?.status || 500;
+    res.status(statusCode).json({
+      error: 'Erro ao consultar a API externa.'
+    });
+  }
+});
 app.listen(PORT, () => {
   console.log(`Servidor Node.js rodando em http://localhost:${PORT}`);
 });

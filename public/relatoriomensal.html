@@ -66,9 +66,10 @@
     <div class="main-content">
         <div class="header">
             <div class="form-group">
-            <label for="no_ente"></label>
-            <form id="form3" class="bottom-group">
-                <select name="dt_mes" id="">
+            <label for="dt_mes"></label>
+            <form id="form" class="bottom-group">
+                <label for="dt_mes"></label>
+                <select name="dt_mes" id="dt_mes" required>
                     <option value="">ESCOLHA UM MÊS</option>
                     <option value="1">Janeiro</option>
                     <option value="2">Fevereiro</option>
@@ -83,17 +84,22 @@
                     <option value="11">Novembro</option>
                     <option value="12">Dezembro</option>
                 </select>
-                <select name="dt_ano" id="">
+
+                <label for="dt_ano"></label>
+                <select name="dt_ano" id="dt_ano" required>
                     <option value="">ESCOLHA UM ANO</option>
                     <option value="2020">2020</option>
                     <option value="2021">2021</option>
-                    <option value="2023">2022</option>
+                    <option value="2022">2022</option>
                     <option value="2023">2023</option>
                     <option value="2024">2024</option>
                     <option value="2025">2025</option>
+
      
                 </select>
-                
+                <button type="submit">ENVIAR</button>
+
+                <div id="resultado"></div>
             </form>
           </div>
         </div>
@@ -106,6 +112,7 @@
             <div class="sidebar-item with-tooltip">
                 <img src="theme/limparBusca.jfif" width="24" height="24" alt="Limpar busca">
                 <span class="button-label">Limpar busca</span>
+                
             </div>
         </button>
         <button class="action-button">
