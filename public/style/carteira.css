@@ -114,6 +114,7 @@
             font-weight: bold;
             letter-spacing: 1px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            
         }
 
         .content-area {
@@ -432,7 +433,7 @@
     font-weight: bold;
     font-size: 0px;
     gap: 15px;
-    padding: 0px 0px 0 840px;
+    padding: 0px 0px 0 100px;
     height: 15px;
     
 }
@@ -449,7 +450,7 @@
     padding: 0px 100px 0 860px;
     height: 15px;
     right: 5px;
-    top: 1px; right: 540px; 
+    top: 1px; right: 340px; 
     padding: 12px;  
 }
 

@@ -11,13 +11,21 @@ app.use(express.json());
 // Rota para consultar dados da API CADPREV com base no nome do ente
 app.get('/proxy/aplicacoes', async (req, res) => {
   console.log('Query recebida(APLICAÇÕES): ', req.query);
-  const { no_ente } = req.query;
+  const { no_ente, dt_mes, dt_ano, sg_uf= 'AM' } = req.query;
+
+  console.log('no_ente:', no_ente, '| dt_mes:', dt_mes, '| dt_ano', dt_ano);
 
   if (!no_ente) {
     return res.status(400).json({ error: `O parâmetro no_ente é obrigatório.`});
   }
 
-  const url = `https://apicadprev.trabalho.gov.br/DAIR_APLICACOES_RESGATE?no_ente=${encodeURIComponent(no_ente)}`;
+  const baseUrl=`https://apicadprev.trabalho.gov.br/DAIR_APLICACOES_RESGATE`;
+  const params = new URLSearchParams({sg_uf, no_ente, dt_mes, dt_ano});
+
+
+
+  const url = `${baseUrl}?${params.toString()}`;
+  console.log('URL Final', url);
 
   try {
     const response = await axios.get(url);
@@ -44,7 +52,8 @@ app.get('/proxy/carteira', async (req, res) => {
     const response = await axios.get(url);
     const data = response.data;
 
-    res.json(data);
+    const dataprev = res.json(data);
+    console.log(dataprev);
   } catch (error) {
     console.error('Erro no proxy: ', error);
     res.status(500).json({ error: 'Erro interno no servidor proxy' });
@@ -114,7 +123,8 @@ app.get('/proxy/aplicacoes/relatoriomensal', async (req, res) => {
   console.log('URL FINAL', url);
   try {
     const response = await axios.get(url);
-    res.json(response.data);
+    const dataprev=res.json(response.data);
+    console.log(dataprev);
   } catch (error) {
     console.error('Erro no proxy: ', error.message);
     const statusCode = error.response?.status || 500;

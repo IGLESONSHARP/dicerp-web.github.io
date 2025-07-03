@@ -1,3 +1,7 @@
+/*API servidor*/
+
+
+/*graficos e analises*/
 const monthlyData = {
   labels: ['Jan', 'Fev', 'Mar','Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
   datasets: [

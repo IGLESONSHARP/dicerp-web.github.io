@@ -1,40 +1,19 @@
-document.getElementById('form').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const no_ente = document.getElementById('no_ente').value.trim();
-  const resultado = document.getElementById('resultado');
-
-  resultado.innerHTML = 'Carregando...';
-
-  try {
-    const url = `http://localhost:3000/proxy/aplicacoes?no_ente=${encodeURIComponent(no_ente)}`;
-    console.log("Consultando ente: ", no_ente);
-    const response = await fetch(url);
-
-    const contentType = response.headers.get("content-type");
-
-    if (!contentType || !contentType.includes("application/json")) {
-      const text = await response.text();
-      console.error("Resposta não é JSON:", text);
-      resultado.innerHTML = 'A resposta do servidor não é um JSON válido.';
-      return;
-    }
-
-    const data = await response.json();
-    const resultadoData = data?.results?.[0]?.data;
-
-    if (Array.isArray(resultadoData) && resultadoData.length > 0) {
-      resultado.innerHTML = `<pre>${JSON.stringify(resultadoData, null, 2)}</pre>`;
-    } else {
-      resultado.innerHTML = 'Nenhum dado encontrado.';
-    }
-  } catch (error) {
-    console.error("Erro ao consultar dados:", error);
-    resultado.innerHTML = 'Erro ao consultar dados.';
-  }
+// Adiciona os listeners nos campos
+['no_ente', 'dt_mes', 'dt_ano'].forEach(id => {
+  document.getElementById(id).addEventListener('change', buscarDados);
 });
 
-document.getElementById('no_ente').addEventListener('change', async (e) => {
-  const no_ente = e.target.value;
+document.getElementById('form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  await buscarDados();
+});
+
+// Função principal para buscar e exibir os dados
+async function buscarDados() {
+  const sg_uf = document.getElementById('sg_uf').value.trim();
+  const no_ente = document.getElementById('no_ente').value.trim();
+  const dt_mes = document.getElementById('dt_mes').value.trim();
+  const dt_ano = document.getElementById('dt_ano').value.trim();
   const resultado = document.getElementById('resultado');
   const tabela = document.getElementById('table-rows');
   const cnpjDiv = document.getElementById('cnpj-container');
@@ -47,9 +26,9 @@ document.getElementById('no_ente').addEventListener('change', async (e) => {
     resultado.innerHTML = '';
     return;
   }
-
+  
   try {
-    const url = `http://localhost:3000/proxy/aplicacoes?no_ente=${encodeURIComponent(no_ente)}`;
+    const url = `http://localhost:3000/proxy/aplicacoes?no_ente=${encodeURIComponent(no_ente)}&dt_mes=${encodeURIComponent(dt_mes)}&dt_ano=${encodeURIComponent(dt_ano)}`;
     const response = await fetch(url);
     const contentType = response.headers.get("content-type") || "";
 
@@ -64,60 +43,40 @@ document.getElementById('no_ente').addEventListener('change', async (e) => {
     const resultadoData = data?.results?.[0]?.data;
 
     if (Array.isArray(resultadoData) && resultadoData.length > 0) {
-      // ✅ Mostra o CNPJ da entidade uma vez
-      const primeiroItem = resultadoData[0];
-      const segundoItem = resultadoData[1];
       resultadoData.sort((a, b) => a.dt_ano - b.dt_ano);
 
-      const estadoEntidade= getEstadoSigla(segundoItem) || 'N/A';
-
+      const primeiroItem = resultadoData[0];
+      const estadoEntidade = getEstadoSigla(primeiroItem) || 'N/A';
       const cnpjEntidade = primeiroItem.nr_cnpj_entidade
         ? formatarCNPJ(primeiroItem.nr_cnpj_entidade)
         : 'N/A';
 
       if (cnpjDiv) {
         cnpjDiv.innerHTML = `
-          <strong><span class="main-content2"></span></strong>
-          <strong>CNPJ: ${cnpjEntidade}
-            <span class="main-content2"></span>
-          </strong>
-          <strong>UF: ${estadoEntidade}
-            <span class="main-content2"></span>
-          </strong>
-        
+          <strong>CNPJ: ${cnpjEntidade}</strong>
+          <strong>UF: ${estadoEntidade}</strong>
         `;
       }
 
       resultado.innerHTML = `Foram encontrados ${resultadoData.length} registros.`;
 
-      // ✅ Cabeçalho da tabela
       const header = document.createElement('div');
       header.classList.add('table-row', 'table-header');
       header.innerHTML = `
         <div class="table-columns">
-                            <div></div>                            
-                            <div class="column-header" ></div>
-                            <div class="column-header"></div>
-                            <div class="column-header"></div>
-                            <div class="column-header"></div>
-                            <div class="column-header"></div>
-                            <div class="column-header"></div>
-                            <div class="tooltip">
-                                
-                                <span class="tooltip-text"></span>
-                            </div>
-                        </div>
+          <div></div>
+          <div class="column-header">Fundo</div>
+          <div class="column-header">Mês</div>
+          <div class="column-header">Ano</div>
+          <div class="column-header">Valor</div>
+          <div class="column-header">Tipo Operação</div>
+        </div>
       `;
       tabela.appendChild(header);
 
-      // ✅ Linhas da tabela
       resultadoData.forEach(item => {
         const fundo = item.ds_identificacao_ativo || '-';
-        
-
-        const mes = item.dt_mes
-          ? numeroParaMes(item.dt_mes)
-            : 'N/A';
+        const mes = item.dt_mes ? numeroParaMes(item.dt_mes) : 'N/A';
         const ano = item.dt_ano || '-';
         const valor = item.vl_operacao
           ? Number(item.vl_operacao).toLocaleString('pt-BR', {
@@ -126,23 +85,18 @@ document.getElementById('no_ente').addEventListener('change', async (e) => {
             })
           : '-';
         const toperacao = item.tp_operacao || '-';
-        const segmento = item.no_segmeto || '-';
 
         const row = document.createElement('div');
         row.classList.add('table-columns');
         row.innerHTML = `
-          <div></div> <!-- coluna vazia -->
+          <div></div>
           <div class="column-header">${fundo}</div>
-          <div class="column-header">${mes}</div>
-          <div class="column-header">${ano}</div>
+
           <div class="column-header">${valor}</div>
           <div class="column-header">${toperacao}</div>
-          <div class="column-header">${segmento}</div>
-          
         `;
         tabela.appendChild(row);
       });
-
     } else {
       resultado.innerHTML = 'Nenhum dado encontrado.';
     }
@@ -150,42 +104,48 @@ document.getElementById('no_ente').addEventListener('change', async (e) => {
     console.error("Erro ao consultar dados:", error);
     resultado.innerHTML = 'Erro ao consultar dados.';
   }
+}
+/*exportar excel*/
+let resultadoData = []; // variável global para armazenar os dados
+
+document.getElementById('form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const no_ente = document.getElementById('no_ente').value.trim();
+  const dt_mes = document.getElementById('dt_mes').value.trim();
+  const dt_ano = document.getElementById('dt_ano').value.trim();
+
+  let url = `http://localhost:3000/proxy/aplicacoes?no_ente=${encodeURIComponent(no_ente)}`;
+  if (dt_mes) url += `&dt_mes=${encodeURIComponent(dt_mes)}`;
+  if (dt_ano) url += `&dt_ano=${encodeURIComponent(dt_ano)}`;
+
+  const resultado = document.getElementById('resultado');
+  resultado.innerHTML = 'Carregando...';
+
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    resultadoData = data?.results?.[0]?.data || [];
+
+    if (resultadoData.length > 0) {
+      resultado.innerHTML = `Foram encontrados ${resultadoData.length} registros.`;
+    } else {
+      resultado.innerHTML = 'Nenhum dado encontrado.';
+    }
+  } catch (error) {
+    resultado.innerHTML = 'Erro ao consultar dados.';
+  }
 });
 
-/** Formata CNPJ */
-function formatarCNPJ(cnpj) {
-  cnpj = cnpj.toString().padStart(14, '0'); // garante 14 dígitos
-  return cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, "$1.$2.$3/$4-$5");
-}
-
-function extrairEstado(str) {
-  if (!str || typeof str !== 'string') return '';
-
-  const partes = str.trim().split('-');
-  if (partes.length > 1) {
-    return partes[partes.length - 1].trim(); // Retorna o que vem após o hífen
+document.getElementById('exportarExcel').addEventListener('click', () => {
+  if (!resultadoData || resultadoData.length === 0) {
+    alert("Nenhum dado para exportar.");
+    return;
   }
-  return '';
-}
 
-function getEstadoSigla(obj)
-{
-  return obj?.sg_uf || '';
-}
-function numeroParaMes(numero)
-{
-  const meses = [
-    "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
-  ];
-  
-  if(numero >= 1 && numero <=12)
-  {
-    return meses[numero - 1];
-  } else 
-  {
-    return "Mês Inválido";
-  }
-}
-// Exemplos:
-console.log(extrairEstado("Prefeitura de Manaus - AM")); // "AM"
-console.log(extrairEstado("Fundo Municipal de Saúde - SP")); // "SP"
+  const worksheet = XLSX.utils.json_to_sheet(resultadoData);
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Aplicações");
+
+  XLSX.writeFile(workbook, "dados_aplicacoes.xlsx");
+});
