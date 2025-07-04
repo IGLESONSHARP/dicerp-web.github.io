@@ -12,15 +12,19 @@ app.use(express.json());
 app.get('/proxy/aplicacoes', async (req, res) => {
   console.log('Query recebida(APLICAÇÕES): ', req.query);
   const { no_ente, dt_mes, dt_ano, sg_uf= 'AM' } = req.query;
+  
 
   console.log('no_ente:', no_ente, '| dt_mes:', dt_mes, '| dt_ano', dt_ano);
 
   if (!no_ente) {
     return res.status(400).json({ error: `O parâmetro no_ente é obrigatório.`});
   }
+  
 
   const baseUrl=`https://apicadprev.trabalho.gov.br/DAIR_APLICACOES_RESGATE`;
-  const params = new URLSearchParams({sg_uf, no_ente, dt_mes, dt_ano});
+  const params = new URLSearchParams({sg_uf, no_ente});
+  if (dt_mes) params.append('dt_mes', dt_mes);
+  if (dt_ano) params.append('dt_ano', dt_ano);
 
 
 
@@ -33,32 +37,63 @@ app.get('/proxy/aplicacoes', async (req, res) => {
 
     res.json(data);
   } catch (error) {
-    console.error('Erro no proxy: ', error);
-    res.status(500).json({ error: 'Erro interno no servidor proxy' });
+
+    if (error.response) {
+      console.error('Erro resposta API externa:', error.response.data);
+      res.status(error.response.status).json({
+
+        error: 'Erro na API externa',
+        detalhes: error.response.data
+      });
+      } else {
+        console.error('Erro no proxy:', error.message);
+        res.status(500).json({ error: 'Erro interno no servidor proxy' });
+      }
+
   }
 });
 
 app.get('/proxy/carteira', async (req, res) => {
   console.log('Query recebida(CARTEIRA): ', req.query);
-  const { no_ente } = req.query;
+  const { sg_uf='AM', no_ente, dt_mes_bimestre, dt_ano } = req.query;
+
+  console.log('sg_uf:', sg_uf, '|no_ente:', no_ente, '|dt_mes:', dt_mes_bimestre, '|dt_ano:', dt_ano);
 
   if (!no_ente) {
     return res.status(400).json({ error: 'O parâmetro no_ente é obrigatório.' });
   }
 
-  const url = `https://apicadprev.trabalho.gov.br/DAIR_CARTEIRA?no_ente=${encodeURIComponent(no_ente)}`;
+  
+  const baseUrl='https://apicadprev.trabalho.gov.br/DAIR_CARTEIRA';
+  const params = new URLSearchParams({sg_uf, no_ente});
+  if (dt_mes_bimestre) params.append('dt_mes_bimestre', dt_ano);
+  if (dt_ano) params.append('dt_ano', dt_ano);
+
+  const url = `${baseUrl}?${params.toString()}`;
+  console.log('URL Final', url);
+
 
   try {
     const response = await axios.get(url);
     const data = response.data;
 
-    const dataprev = res.json(data);
-    console.log(dataprev);
+    res.json(data);
   } catch (error) {
-    console.error('Erro no proxy: ', error);
-    res.status(500).json({ error: 'Erro interno no servidor proxy' });
+
+    if (error.response) {
+      console.error('Erro resposta API externa:', error.response.data);
+      res.status(error.response.status).json({
+
+        error: 'Erro na API externa',
+        detalhes: error.response.data
+      });
+      } else {
+        console.error('Erro no proxy:', error.message);
+        res.status(500).json({ error: 'Erro interno no servidor proxy' });
+      }
+
   }
-})
+});
 
 
 app.get('/proxy/fundos', async (req, res) => {

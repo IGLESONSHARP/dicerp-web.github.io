@@ -10,7 +10,7 @@ document.getElementById('form').addEventListener('submit', async (e) => {
 
 // Função principal para buscar e exibir os dados
 async function buscarDados() {
-  const sg_uf = document.getElementById('sg_uf').value.trim();
+  const sg_uf = 'AM';
   const no_ente = document.getElementById('no_ente').value.trim();
   const dt_mes = document.getElementById('dt_mes').value.trim();
   const dt_ano = document.getElementById('dt_ano').value.trim();
@@ -28,7 +28,11 @@ async function buscarDados() {
   }
   
   try {
-    const url = `http://localhost:3000/proxy/aplicacoes?no_ente=${encodeURIComponent(no_ente)}&dt_mes=${encodeURIComponent(dt_mes)}&dt_ano=${encodeURIComponent(dt_ano)}`;
+    let url = `http://localhost:3000/proxy/aplicacoes?sg_uf=${encodeURIComponent(sg_uf)}&no_ente=${encodeURIComponent(no_ente)}`;
+    if (dt_mes) url += `&dt_mes=${encodeURIComponent(dt_mes)}`;
+    if (dt_ano) url += `&dt_ano=${encodeURIComponent(dt_ano)}`;
+
+    
     const response = await fetch(url);
     const contentType = response.headers.get("content-type") || "";
 
@@ -76,8 +80,8 @@ async function buscarDados() {
 
       resultadoData.forEach(item => {
         const fundo = item.ds_identificacao_ativo || '-';
-        const mes = item.dt_mes ? numeroParaMes(item.dt_mes) : 'N/A';
-        const ano = item.dt_ano || '-';
+        /*const mes = item.dt_mes ? numeroParaMes(item.dt_mes) : 'N/A';
+        const ano = item.dt_ano || '-';*/
         const valor = item.vl_operacao
           ? Number(item.vl_operacao).toLocaleString('pt-BR', {
               style: 'currency',

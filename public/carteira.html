@@ -66,9 +66,9 @@
     <div class="main-content">
         <div class="header">
             
-            <label for="dt_mes"></label>
-            <form id="form">
-                <select name="no_ente" id="no_ente">
+           
+            <form id="form1">
+                <select name="no_ente" id="no_ente" required>
                     <option value="">ESCOLHA UM MUNICÍPIO DO RPPS</option>
                     <option value="Amazonas">AMAZONAS</option>
                     <option value="Barcelos">Barcelos-AM</option>
@@ -99,8 +99,8 @@
                     <option value="Urucará">Urucará-AM</option>
                 </select>
                     
-                <label for="dt_mes"></label>
-                <select name="dt_mes" id="dt_mes" required>
+                <label for="dt_mes_bimestre"></label>
+                <select name="dt_mes_bimestre" id="dt_mes_bimestre" >
                     <option value="">ESCOLHA UM MÊS</option>
                     <option value="1">Janeiro</option>
                     <option value="2">Fevereiro</option>
@@ -117,7 +117,7 @@
                 </select>
 
                 <label for="dt_ano"></label>
-                <select name="dt_ano" id="dt_ano" not required>
+                <select name="dt_ano" id="dt_ano" >
                     <option value="">ESCOLHA UM ANO</option>
                     <option value="2020">2020</option>
                     <option value="2021">2021</option>
@@ -126,10 +126,8 @@
                     <option value="2024">2024</option>
                     <option value="2025">2025</option>
                 </select>
-                <button type="submit" style="background-color: greenyellow;">ENVIAR</button>
-                <button type="submit" style="background-color: red;">DELETE</button>
-
-                <div id="resultado"></div>
+                <button type="submit" style="background-color: greenyellow;">BUSCAR</button>
+                <button type="reset" style="background-color: red;">DELETE</button>   
             </form>
          
         </div>

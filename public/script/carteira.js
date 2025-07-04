@@ -1,41 +1,36 @@
-document.getElementById('form1').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const no_ente = document.getElementById('no_ente').value.trim();
-  const resultado = document.getElementById('resultado');
 
-  resultado.innerHTML = 'Carregando...';
+document.getElementById('form1').addEventListener('submit', async function(e) {
+  e.preventDefault(); // Evita o envio tradicional do formulário
+
+  const no_ente = document.getElementById('no_ente').value.trim();
+  const dt_mes_bimestre = document.getElementById('dt_mes_bimestre').value.trim();
+  const dt_ano = document.getElementById('dt_ano').value.trim();
+  
+  if (!no_ente) {
+    alert('Por favor, selecione um município.');
+    return;
+  }
+
+  let url = `http://localhost:3000/proxy/aplicacoes?no_ente=${encodeURIComponent(no_ente)}`;
+  if (dt_mes_bimestre) url += `&dt_mes_bimestre=${encodeURIComponent(dt_mes_bimestre)}`;
+  if (dt_ano) url += `&dt_ano=${encodeURIComponent(dt_ano)}`;
 
   try {
-    const url = `http://localhost:3000/proxy/carteira?no_ente=${encodeURIComponent(no_ente)}`;
-    console.log("Consultando ente: ", no_ente);
     const response = await fetch(url);
-
-    const contentType = response.headers.get("content-type");
-
-    if (!contentType || !contentType.includes("application/json")) {
-      const text = await response.text();
-      console.error("Resposta não é JSON:", text);
-      resultado.innerHTML = 'A resposta do servidor não é um JSON válido.';
-      return;
-    }
-
     const data = await response.json();
-    const resultadoData = data?.results?.[0]?.data;
 
-    if (Array.isArray(resultadoData) && resultadoData.length > 0) {
-      resultado.innerHTML = `<pre>${JSON.stringify(resultadoData, null, 2)}</pre>`;
-    } else {
-      resultado.innerHTML = 'Nenhum dado encontrado.';
-    }
+    // Aqui você pode exibir os dados em tabela, console, ou exportar
+    console.log('Dados recebidos:', data);
+
+    // Exemplo simples de exibição:
+    const resultado = document.getElementById('resultado');
+    resultado.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
   } catch (error) {
-    console.error("Erro ao consultar dados:", error);
-    resultado.innerHTML = 'Erro ao consultar dados.';
+    console.error('Erro na requisição:', error);
+    alert('Erro ao consultar os dados. Verifique o console.');
   }
-});
 
-document.getElementById('no_ente').addEventListener('change', async (e) => {
-  const no_ente = e.target.value;
-  const resultado = document.getElementById('resultado');
+  /*html js*/
   const tabela = document.getElementById('table-rows');
   const cnpjDiv = document.getElementById('cnpj-container');
 
@@ -49,7 +44,10 @@ document.getElementById('no_ente').addEventListener('change', async (e) => {
   }
 
   try {
-    const url = `http://localhost:3000/proxy/carteira?no_ente=${encodeURIComponent(no_ente)}`;
+    let url = `http://localhost:3000/proxy/carteira?sg_uf=${encodeURIComponent(sg_uf)}&no_ente=${encodeURIComponent(no_ente)}`;
+    if (dt_mes_bimestre) url += `&dt_mes_bimestre=${encodeURIComponent(dt_mes_bimestre)}`;
+    if (dt_ano) url += `&dt_ano=${encodeURIComponent(dt_ano)}`;
+
     const response = await fetch(url);
     const contentType = response.headers.get("content-type") || "";
 
@@ -163,37 +161,3 @@ document.getElementById('no_ente').addEventListener('change', async (e) => {
   }
 });
 
-/** Formata CNPJ */
-function formatarCNPJ(cnpj) {
-  cnpj = cnpj.toString().padStart(14, '0'); // garante 14 dígitos
-  return cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, "$1.$2.$3/$4-$5");
-}
-
-function extrairEstado(str) {
-  if (!str || typeof str !== 'string') return '';
-
-  const partes = str.trim().split('-');
-  if (partes.length > 1) {
-    return partes[partes.length - 1].trim(); // Retorna o que vem após o hífen
-  }
-  return '';
-}
-
-function getEstadoSigla(obj)
-{
-  return obj?.sg_uf || '';
-}
-
-function numeroParaMes(numero)
-{
-  const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezemevro"];
-  if(numero >= 1 && numero <= 12)
-  {
-    return meses[numero -1];
-  } else {
-    return "Mês Inválido";
-  }
-}
-// Exemplos:
-console.log(extrairEstado("Prefeitura de Manaus - AM")); // "AM"
-console.log(extrairEstado("Fundo Municipal de Saúde - SP")); // "SP"
