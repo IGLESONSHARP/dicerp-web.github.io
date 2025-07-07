@@ -1,40 +1,11 @@
-document.getElementById('form2').addEventListener('submit', async (e) => {
+
+document.getElementById('form3').addEventListener('submit', async function(e) {
   e.preventDefault();
+   // Evita o envio tradicional do formulário
+  const sg_uf = 'AM';
   const no_ente = document.getElementById('no_ente').value.trim();
-  const resultado = document.getElementById('resultado');
-
-  resultado.innerHTML = 'Carregando...';
-
-  try {
-    const url = `http://localhost:3000/proxy/fundos?no_ente=${encodeURIComponent(no_ente)}`;
-    console.log("Consultando ente: ", no_ente);
-    const response = await fetch(url);
-
-    const contentType = response.headers.get("content-type");
-
-    if (!contentType || !contentType.includes("application/json")) {
-      const text = await response.text();
-      console.error("Resposta não é JSON:", text);
-      resultado.innerHTML = 'A resposta do servidor não é um JSON válido.';
-      return;
-    }
-
-    const data = await response.json();
-    const resultadoData = data?.results?.[0]?.data;
-
-    if (Array.isArray(resultadoData) && resultadoData.length > 0) {
-      resultado.innerHTML = `<pre>${JSON.stringify(resultadoData, null, 2)}</pre>`;
-    } else {
-      resultado.innerHTML = 'Nenhum dado encontrado.';
-    }
-  } catch (error) {
-    console.error("Erro ao consultar dados:", error);
-    resultado.innerHTML = 'Erro ao consultar dados.';
-  }
-});
-
-document.getElementById('no_ente').addEventListener('change', async (e) => {
-  const no_ente = e.target.value;
+  const dt_mes = document.getElementById('dt_mes').value.trim();
+  const dt_ano = document.getElementById('dt_ano').value.trim();
   const resultado = document.getElementById('resultado');
   const tabela = document.getElementById('table-rows');
   const cnpjDiv = document.getElementById('cnpj-container');
@@ -48,11 +19,15 @@ document.getElementById('no_ente').addEventListener('change', async (e) => {
     return;
   }
 
-  try {
-    const url = `http://localhost:3000/proxy/fundos?no_ente=${encodeURIComponent(no_ente)}`;
-    const response = await fetch(url);
-    const contentType = response.headers.get("content-type") || "";
+ 
+  let url = `http://localhost:3000/proxy/fundos?sg_uf=${encodeURIComponent(sg_uf)}&no_ente=${encodeURIComponent(no_ente)}`;
+  if (dt_mes) url += `&dt_mes=${encodeURIComponent(dt_mes)}`;
+  if (dt_ano) url += `&dt_ano=${encodeURIComponent(dt_ano)}`;
 
+  try {
+    const response = await fetch(url);
+
+    const contentType = response.headers.get("content-type") || "";
     if (!contentType.includes("application/json")) {
       const text = await response.text();
       console.error("Resposta do servidor (não JSON):", text);
@@ -63,7 +38,7 @@ document.getElementById('no_ente').addEventListener('change', async (e) => {
     const data = await response.json();
     const resultadoData = data?.results?.[0]?.data;
 
-    if (Array.isArray(resultadoData) && resultadoData.length > 0) {
+     if (Array.isArray(resultadoData) && resultadoData.length > 0) {
       // ✅ Mostra o CNPJ da entidade uma vez
       const primeiroItem = resultadoData[0];
       const segundoItem = resultadoData[1];
@@ -99,6 +74,8 @@ document.getElementById('no_ente').addEventListener('change', async (e) => {
                             <div class="column-header"></div>
                             <div class="column-header"></div>
                             <div class="column-header"></div>
+                            <div class="column-header" ></div>
+                  
                             <div class="tooltip">
                                 
                                 <span class="tooltip-text"></span>
@@ -110,37 +87,57 @@ document.getElementById('no_ente').addEventListener('change', async (e) => {
       // ✅ Linhas da tabela
       resultadoData.forEach(item => {
         const fundo = item.no_fundo || '-';
-        const cnpjFundo = item.nr_cnpj_fundo
-          ? formatarCNPJ(item.nr_cnpj_fundo)
-          : 'N/A';
-        const mes = item.dt_mes
-          ? numeroParaMes(item.dt_mes)
+        /*const mes = item.dt_mes_bimestre
+          ? numeroParaMes(item.dt_mes_bimestre)
             : 'N/A';
-        const ano = item.dt_ano || '-';
-        
+        const ano = item.dt_ano || '-';*/
+
+        const cnpjfundo = item.nr_cnpj_fundo
+        ? formatarCNPJ(item.nr_cnpj_fundo)
+        : 'N/A';
+        const segmento = item.segmento || '-';
+        const analise = item.dt_analise || '-';
 
         const row = document.createElement('div');
         row.classList.add('table-columns');
         row.innerHTML = `
           <div></div> <!-- coluna vazia -->
           <div class="column-header">${fundo}</div>
-          <div class="column-header">${cnpjFundo}</div>
-          <div class="column-header">${mes}</div>
-          <div class="column-header">${ano}</div>
+          <div class="column-header">${cnpjfundo}</div>
+          <div class="column-header">${segmento}</div>   
+          <div class="column-header">${analise}</div>        
         `;
         tabela.appendChild(row);
       });
 
     } else {
-      resultado.innerHTML = 'Nenhum dado encontrado.';
+      resultado.innerHTML = 'Nenhum dado encontrado. API para consulta fora do AR!';
     }
   } catch (error) {
     console.error("Erro ao consultar dados:", error);
-    resultado.innerHTML = 'Erro ao consultar dados.';
+    resultado.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
   }
 });
 
-/** Formata CNPJ */
+
+/*exportar excel*/
+let resultadoData = []; // variável global para armazenar os dados
+
+
+document.getElementById('exportarExcel').addEventListener('click', () => {
+  if (!resultadoData || resultadoData.length === 0) {
+    alert("Nenhum dado para exportar.");
+    return;
+  }
+
+  const worksheet = XLSX.utils.json_to_sheet(resultadoData);
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Aplicações");
+
+  XLSX.writeFile(workbook, "dados_aplicacoes.xlsx");
+
+});
+/*FUNÇÕES PARA CONVESÃO DE DADOS NO FRONT, EXEMPLO: INTEIROS PARA REAIS (R$)*/
 function formatarCNPJ(cnpj) {
   cnpj = cnpj.toString().padStart(14, '0'); // garante 14 dígitos
   return cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, "$1.$2.$3/$4-$5");
@@ -163,19 +160,11 @@ function getEstadoSigla(obj)
 
 function numeroParaMes(numero)
 {
-  const meses = [
-    "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
-  ];
+  const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezemevro"];
   if(numero >= 1 && numero <= 12)
   {
-    return meses[numero - 1]
-  }
-  else{
-    return "Mês inválido";
+    return meses[numero -1];
+  } else {
+    return "Mês Inválido";
   }
 }
-
-
-// Exemplos:
-console.log(extrairEstado("Prefeitura de Manaus - AM")); // "AM"
-console.log(extrairEstado("Fundo Municipal de Saúde - SP")); // "SP"

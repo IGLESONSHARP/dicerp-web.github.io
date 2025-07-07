@@ -1,36 +1,12 @@
 
-document.getElementById('form1').addEventListener('submit', async function(e) {
-  e.preventDefault(); // Evita o envio tradicional do formulário
-
+document.getElementById('form2').addEventListener('submit', async function(e) {
+  e.preventDefault();
+   // Evita o envio tradicional do formulário
+  const sg_uf = 'AM';
   const no_ente = document.getElementById('no_ente').value.trim();
   const dt_mes_bimestre = document.getElementById('dt_mes_bimestre').value.trim();
   const dt_ano = document.getElementById('dt_ano').value.trim();
-  
-  if (!no_ente) {
-    alert('Por favor, selecione um município.');
-    return;
-  }
-
-  let url = `http://localhost:3000/proxy/aplicacoes?no_ente=${encodeURIComponent(no_ente)}`;
-  if (dt_mes_bimestre) url += `&dt_mes_bimestre=${encodeURIComponent(dt_mes_bimestre)}`;
-  if (dt_ano) url += `&dt_ano=${encodeURIComponent(dt_ano)}`;
-
-  try {
-    const response = await fetch(url);
-    const data = await response.json();
-
-    // Aqui você pode exibir os dados em tabela, console, ou exportar
-    console.log('Dados recebidos:', data);
-
-    // Exemplo simples de exibição:
-    const resultado = document.getElementById('resultado');
-    resultado.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
-  } catch (error) {
-    console.error('Erro na requisição:', error);
-    alert('Erro ao consultar os dados. Verifique o console.');
-  }
-
-  /*html js*/
+  const resultado = document.getElementById('resultado');
   const tabela = document.getElementById('table-rows');
   const cnpjDiv = document.getElementById('cnpj-container');
 
@@ -43,14 +19,15 @@ document.getElementById('form1').addEventListener('submit', async function(e) {
     return;
   }
 
+ 
+  let url = `http://localhost:3000/proxy/carteira?sg_uf=${encodeURIComponent(sg_uf)}&no_ente=${encodeURIComponent(no_ente)}`;
+  if (dt_mes_bimestre) url += `&dt_mes_bimestre=${encodeURIComponent(dt_mes_bimestre)}`;
+  if (dt_ano) url += `&dt_ano=${encodeURIComponent(dt_ano)}`;
+
   try {
-    let url = `http://localhost:3000/proxy/carteira?sg_uf=${encodeURIComponent(sg_uf)}&no_ente=${encodeURIComponent(no_ente)}`;
-    if (dt_mes_bimestre) url += `&dt_mes_bimestre=${encodeURIComponent(dt_mes_bimestre)}`;
-    if (dt_ano) url += `&dt_ano=${encodeURIComponent(dt_ano)}`;
-
     const response = await fetch(url);
-    const contentType = response.headers.get("content-type") || "";
 
+    const contentType = response.headers.get("content-type") || "";
     if (!contentType.includes("application/json")) {
       const text = await response.text();
       console.error("Resposta do servidor (não JSON):", text);
@@ -61,7 +38,7 @@ document.getElementById('form1').addEventListener('submit', async function(e) {
     const data = await response.json();
     const resultadoData = data?.results?.[0]?.data;
 
-    if (Array.isArray(resultadoData) && resultadoData.length > 0) {
+     if (Array.isArray(resultadoData) && resultadoData.length > 0) {
       // ✅ Mostra o CNPJ da entidade uma vez
       const primeiroItem = resultadoData[0];
       const segundoItem = resultadoData[1];
@@ -153,11 +130,11 @@ document.getElementById('form1').addEventListener('submit', async function(e) {
       });
 
     } else {
-      resultado.innerHTML = 'Nenhum dado encontrado.';
+      resultado.innerHTML = 'Nenhum dado encontrado. API para consulta fora do AR!';
     }
   } catch (error) {
     console.error("Erro ao consultar dados:", error);
-    resultado.innerHTML = 'Erro ao consultar dados.';
+    resultado.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
   }
 });
 

@@ -88,7 +88,7 @@
                 </select>
 
                 <label for="dt_ano"></label>
-                <select name="dt_ano" id="dt_ano" not required>
+                <select name="dt_ano" id="dt_ano" required>
                     <option value="">ESCOLHA UM ANO</option>
                     <option value="2020">2020</option>
                     <option value="2021">2021</option>
@@ -97,7 +97,8 @@
                     <option value="2024">2024</option>
                     <option value="2025">2025</option>
                 </select>
-                <button type="submit" >ENVIAR</button>
+                <button type="submit" style="background-color: greenyellow;">BUSCAR</button>
+                <button type="reset" style="background-color: red;">DELETE</button>
 
                 <div id="resultado"></div>
             </form>
@@ -115,10 +116,10 @@
                 
             </div>
         </button>
-        <button class="action-button">
+        <button class="action-button" id="btnExportar">
             <div class="sidebar-item with-tooltip">
-                <img src="theme/EXPORTAR_EXCEL.webp" width="24" height="24" alt="Exportar xlsx">
-                <span class="button-label">Exportar Excel</span>
+                <img src="theme/EXPORTAR_PDF.png" width="21" height="24" alt="Exportar xlsx">
+                <span class="button-label">Exportar em PDF</span>
             </div>
         </button>
         <button class="action-button">
@@ -146,7 +147,7 @@
 
     
 
-        <div class="content">
+        <div class="content" id="area-pdf">
                 <div class="content-header">
                     <h2>APLICAÇÃO E RESGATE (MENSAL)</h2>
                 </div>
@@ -286,6 +287,8 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
     <script src="script/relatoriomensal.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 
 </body>
