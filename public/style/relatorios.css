@@ -1,4 +1,4 @@
-{
+*{
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -124,6 +124,7 @@
             justify-content: center;
             padding: 0px;
             padding-right: 5px;
+          
         }
         .table-row 
         {
@@ -254,6 +255,9 @@
             right: 10px;
         }
 
+
+
+
         /* === BALÃO DE FALA === */
         .speech-bubble {
             position: absolute;
@@ -327,8 +331,64 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            transition: transform 0.6s ease;
         }
+        .with-tooltip-bases {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.6s ease;
+        }
+        
 
+.container {
+      width: 200px;
+      margin: 100px auto;
+      text-align: center;
+    }
+
+    .imagem-rotativa {
+      width: 150px;
+      transition: transform 0.6s ease;
+    }
+
+    .imagem-wrapper:hover .imagem-rotativa {
+      transform: rotate(360deg);
+    }
+
+    .tooltip {
+      position: relative;
+      display: inline-block;
+      cursor: pointer;
+    }
+
+    .tooltip .mensagem {
+      visibility: hidden;
+      width: 180px;
+      background-color: #333;
+      color: #fff;
+      text-align: center;
+      padding: 6px;
+      border-radius: 6px;
+
+      /* Posição do tooltip */
+      position: absolute;
+      z-index: 1;
+      bottom: 120%; /* acima da imagem */
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+
+    .tooltip:hover .mensagem {
+      visibility: visible;
+      opacity: 1;
+    }
+    
+    
         .button-label {
             position: absolute;
             bottom: 100%;
@@ -357,18 +417,7 @@
             padding-right: 4px;
             border-radius: 2px;
         }
-        .icon-with-sides2 {
-            background-color: #07e821; /* cor desejada */
-            border: none;
-            padding: 6px;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: background 1s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            
-        }
+ 
 
         /* === OUTROS GRUPOS === */
         .button-group-right {
@@ -502,20 +551,64 @@
     width: 100%;
     padding: 20px;
   }
-
   .table-columns {
     display: flex;
-    gap: 30px;
-    padding: 10px 0;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
   }
 
   .column-header {
-    font-weight: bold;
-    position: relative;
-    color: #333;
-    width: 350px
-    
+    perspective: 1000px;
+    width: 400px;
+    height: 200px;
+    cursor: pointer;
+    margin-bottom: 100px;
   }
+
+  .icon-item-bases {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+  }
+
+  .column-header:hover .icon-item-bases {
+    transform: rotateY(180deg);
+  }
+
+  .card-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 10px;
+  }
+
+  .card-front {
+    background-color: #f0f0f0;
+  }
+
+  .card-back {
+    background-color: #004d99;
+    color: #fff;
+    transform: rotateY(180deg);
+  }
+
+  .label {
+    margin-top: 10px;
+    font-size: 14px;
+  }
+
+
   .column-header-mes-ano {
     font-weight: bold;
     color: #333;

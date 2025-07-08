@@ -41,7 +41,7 @@ document.getElementById('form4').addEventListener('submit', async function(e) {
      if (Array.isArray(resultadoData) && resultadoData.length > 0) {
       // ✅ Mostra o CNPJ da entidade uma vez
       const primeiroItem = resultadoData[0];
-      const segundoItem = resultadoData[1];
+      const segundoItem = resultadoData[2];
 
       const estadoEntidade= getEstadoSigla(segundoItem) || 'N/A';
 
@@ -87,10 +87,8 @@ document.getElementById('form4').addEventListener('submit', async function(e) {
       resultadoData.forEach(item => {
         const nome_servidor = item.no_pessoa || '-';
         const tipo_vinculo = item.tp_vinculo || '-';
-        const mes = item.dt_mes
-          ?numeroParaMes(item.dt_mes)
-            : 'N/A';
-        const ano = item.dt_ano || '-';
+        const no_atribuicao = item.no_atribuicao || '-';
+        const no_orgao_entidade = item.no_orgao_entidade || '-';
 
         const row = document.createElement('div');
         row.classList.add('table-columns');
@@ -98,8 +96,8 @@ document.getElementById('form4').addEventListener('submit', async function(e) {
           <div></div> <!-- coluna vazia -->
           <div class="column-header">${nome_servidor}</div>
           <div class="column-header">${tipo_vinculo}</div>
-          <div class="column-header">${mes}</div>
-          <div class="column-header">${ano}</div>
+          <div class="column-header">${no_atribuicao}</div>
+          <div class="column-header">${no_orgao_entidade}</div>
           <div class="sidebar-item with-tooltip">... 
           <span class="button-label">detalhes</span></div>
           
@@ -117,3 +115,33 @@ document.getElementById('form4').addEventListener('submit', async function(e) {
   }
 });
 
+function formatarCNPJ(cnpj) {
+  cnpj = cnpj.toString().padStart(14, '0'); // garante 14 dígitos
+  return cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, "$1.$2.$3/$4-$5");
+}
+
+function extrairEstado(str) {
+  if (!str || typeof str !== 'string') return '';
+
+  const partes = str.trim().split('-');
+  if (partes.length > 1) {
+    return partes[partes.length - 1].trim(); // Retorna o que vem após o hífen
+  }
+  return '';
+}
+
+function getEstadoSigla(obj)
+{
+  return obj?.sg_uf || '';
+}
+
+function numeroParaMes(numero)
+{
+  const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezemevro"];
+  if(numero >= 1 && numero <= 12)
+  {
+    return meses[numero -1];
+  } else {
+    return "Mês Inválido";
+  }
+}

@@ -87,10 +87,6 @@ document.getElementById('form2').addEventListener('submit', async function(e) {
       // ✅ Linhas da tabela
       resultadoData.forEach(item => {
         const fundo = item.no_fundo || '-';
-        const mes = item.dt_mes_bimestre
-          ? numeroParaMes(item.dt_mes_bimestre)
-            : 'N/A';
-        const ano = item.dt_ano || '-';
         const valor_ativo_atual = item.vl_atual_ativo
         ? Number(item.vl_atual_ativo).toLocaleString('pt-BR', {
               style: 'currency',
@@ -119,11 +115,11 @@ document.getElementById('form2').addEventListener('submit', async function(e) {
         row.innerHTML = `
           <div></div> <!-- coluna vazia -->
           <div class="column-header">${fundo}</div>
-          <div class="column-header">${mes}</div>
-          <div class="column-header">${ano}</div>
           <div class="column-header">${valor_ativo_atual}</div>
           <div class="column-header">${valor_ativo_total}</div>
           <div class="column-header">${patrimonio}</div>
+          <div class="sidebar-item with-tooltip">... 
+          <span class="button-label">detalhes</span></div>
           
         `;
         tabela.appendChild(row);
@@ -138,3 +134,33 @@ document.getElementById('form2').addEventListener('submit', async function(e) {
   }
 });
 
+function formatarCNPJ(cnpj) {
+  cnpj = cnpj.toString().padStart(14, '0'); // garante 14 dígitos
+  return cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, "$1.$2.$3/$4-$5");
+}
+
+function extrairEstado(str) {
+  if (!str || typeof str !== 'string') return '';
+
+  const partes = str.trim().split('-');
+  if (partes.length > 1) {
+    return partes[partes.length - 1].trim(); // Retorna o que vem após o hífen
+  }
+  return '';
+}
+
+function getEstadoSigla(obj)
+{
+  return obj?.sg_uf || '';
+}
+
+function numeroParaMes(numero)
+{
+  const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezemevro"];
+  if(numero >= 1 && numero <= 12)
+  {
+    return meses[numero -1];
+  } else {
+    return "Mês Inválido";
+  }
+}

@@ -108,7 +108,9 @@ document.getElementById('form1').addEventListener('submit', async function(e) {
           <div class="column-header">${identificacao_ativo}</div>
           <div class="column-header">${segmento}</div>
           <div class="column-header">${tipooperacao}</div>   
-          <div class="column-header">${operacao}</div>        
+          <div class="column-header">${operacao}</div>
+          <div class="column-header">...
+          <span class="button-label" style="cursor: pointer;"></span></div>          
         `;
         tabela.appendChild(row);
       });

@@ -45,7 +45,7 @@
             <a class="icon-with-sides2" onclick="window.location.href='relatorios.html'">
                 <div class="sidebar-item" style="margin-bottom: 20px;">
                     <img src="theme/RELATORIOS.png" width="24" height="24" alt="Relatorios">
-                    <span class="label">Relatórios</span>
+                    <span class="label">Base de cálculos</span>
                 </div>
             </a>
         </div>
@@ -73,26 +73,8 @@
 
         <!-- Adicione este bloco DENTRO da div .main-content, logo após a .header -->
     <div class="button-group-left">
-        <span class="destaque">RELATÓRIOS</span>
-        <strong style="right: 500px;">
-            <button class="action-button">
-            <div class="sidebar-item with-tooltip">
-                <img src="theme/limparBusca.jfif" width="24" height="24" alt="Limpar busca">
-                <span class="button-label">Limpar busca</span>
-            </div>
-        </button>
-        <button class="action-button">
-            <div class="sidebar-item with-tooltip">
-                <img src="theme/EXPORTAR_EXCEL.webp" width="24" height="24" alt="Exportar xlsx">
-                <span class="button-label">Exportar Excel</span>
-            </div>
-        </button>
-        <button class="action-button">
-            <div class="sidebar-item with-tooltip">
-                <span class="button-label">Detalhes da busca</span>
-                <img src="theme/DETALHESBUSCA.png" width="24" height="24" alt="Detalhes da busca">
-            </div>
-        </button></strong>
+        <span class="destaque">Base de cálculos</span>
+     
     </div>
     <div class="main-content2">
         <strong> </strong> <!--CNPJ E UF-->
@@ -112,75 +94,54 @@
 
     
 
-        <div class="content-area">
-                
-                <div class="table-row"> 
-                    <div class="table-header">
-                        <div class="table-columns">
-                            <div class="column-header">
-                                <a href="relatoriomensal.html">
-                                    <div class="icon-item with-tooltip">
-                                        <img src="theme/indicadores.png" width="30%"  alt="CI">
-                                        <span class="label">Relatório mensal</span>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="column-header">
-                                <a href="relatorioanual.html">
-                                    <div class="icon-item with-tooltip">
-                                        <img src="theme/indicadores.png" width="30%" alt="CI">
-                                        <span class="label">Relatório anual consolidado</span>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="column-header">
-                                <a href="relatoriocomparativo.html">
-                                    <div class="icon-item with-tooltip">
-                                        <img src="theme/indicadores.png" width="30%" alt="CI">
-                                        <span class="label">Relatório comparativo entre Municípios</span>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="column-header">
-                                <a href="relatoriotipoaplicacao.html">
-                                    <div class="icon-item with-tooltip">
-                                        <img src="theme/indicadores.png" width="30%" alt="CI">
-                                        <span class="label">Relatório por tipo de aplicação</span>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="column-header">
-                                <a href="relatorioconformidade.html">
-                                    <div class="icon-item with-tooltip">
-                                        <img src="theme/indicadores.png" width="30%" alt="CI">
-                                        <span class="label">Relatório de conformidade</span>
-                                    </div>
-                                </a>
-                            </div>
+       <div class="content-area">
+  <div class="table-columns">
 
-                        </div>
-                        
-                        <div id="table-rows" class="table-rows"></div>
-                        
-                <div class="menu-dots">
-                <div id="resultado"></div>
-                </div>
-
-                    </div>
-                    
-                    <div class="table-content">
-                        <!-- Conteúdo da tabela ficaria aqui -->
-                    </div>
-                </div>
-                <div></div>
+    <!-- Relatório Mensal -->
+    <div class="column-header" onclick="window.location.href='relatoriomensal.html'">
+      <div class="icon-item-bases">
+        <div class="card-face card-front">
+          <img src="theme/indicadores.png" width="30%" alt="C1">
+          <span class="label">Relatório mensal</span>
         </div>
-        <div></div>
+        <div class="card-face card-back">
+          <span class="label">Todos os municípios do RPPS do Amazonas</span>
+        </div>
+      </div>
     </div>
-    <div class="footer-bar"></div>
+
+    <!-- Relatório Anual -->
+    <div class="column-header" onclick="window.location.href='relatorioanual.html'">
+      <div class="icon-item-bases">
+        <div class="card-face card-front">
+          <img src="theme/indicadores.png" width="30%" alt="C2">
+          <span class="label">Relatório anual</span>
+        </div>
+        <div class="card-face card-back">
+          <span class="label">Escolha um município do RPPS do Amazonas-DICERP-TCE/AM</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Comparativo -->
+    <div class="column-header" onclick="window.location.href='relatoriocomparativo.html'">
+      <div class="icon-item-bases">
+        <div class="card-face card-front">
+          <img src="theme/indicadores.png" width="30%" alt="C3">
+          <span class="label">Comparativo</span>
+        </div>
+        <div class="card-face card-back">
+          <span class="label">Escolha 3 municípios e analise</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+    </div>
+</div>
+
     <script src="script/relatorios.js"></script>
-    <script>
-        
-    </script>
 
 </body>
 </html>

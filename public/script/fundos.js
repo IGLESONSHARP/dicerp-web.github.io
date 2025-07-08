@@ -105,7 +105,9 @@ document.getElementById('form3').addEventListener('submit', async function(e) {
           <div class="column-header">${fundo}</div>
           <div class="column-header">${cnpjfundo}</div>
           <div class="column-header">${segmento}</div>   
-          <div class="column-header">${analise}</div>        
+          <div class="column-header">${analise}</div>
+          <div class="sidebar-item with-tooltip">... 
+          <span class="button-label">detalhes</span></div>       
         `;
         tabela.appendChild(row);
       });
