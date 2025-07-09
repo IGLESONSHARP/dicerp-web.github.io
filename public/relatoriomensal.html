@@ -100,7 +100,6 @@
                 <button type="submit" style="background-color: greenyellow;">BUSCAR</button>
                 <button type="reset" style="background-color: red;">DELETE</button>
 
-                <div id="resultado"></div>
             </form>
           </div>
         </div>
@@ -184,34 +183,116 @@
                                         <div class="chart-title">APLICAÇÕES</div>
                                         
                                         <div class="chart-placeholder tabela-resgate-aplicacao">
-                                            <form action="" >
-                                                <div>AMAZONPREV</div>
-                                                <div>BARCELOS</div>
-                                                <div>BARREIRINHA</div>
-                                                <div >BENJAMIN CONSTANT</div>
-                                                <div>BERURI</div>
-                                                <div>BORBA</div>
-                                                <div>CAAPIRANGA</div>
-                                                <div>CANUTAMA</div>
-                                                <div>CARAUARI</div>
-                                                <div>COARI</div>
-                                                <div>ENVIRA</div>
-                                                <div>FONTE BOA</div>
-                                                <div>HUMAITÁ</div>
-                                                <div>IRANDUBA</div>
-                                                <div>ITACOATIARA</div>
-                                                <div>LÁBREA</div>
-                                                <div>MANACAPURU</div>
-                                                <div>MANAQUIRI</div>
-                                                <div>MANAUS</div>
-                                                <div>MANICORÉ</div>
-                                                <div>MARAÃ</div>
-                                                <div>MAUÉS</div>
-                                                <div>NHAMUNDÁ</div>
-                                                <div>PRESIDENTE FIGUEIREDO</div>
-                                                <div>RIO PRETO DA EVA</div>
-                                                <div>TABATINGA</div>
-                                                <div>URUCARÁ</div>
+                                            <form id="form" >
+                                                <div id="amazonprev">
+                                                    <span>AMAZONPREV</span>
+                                                    <span id="valor-aplicacao-amazonprev" class="space-table"></span>
+                                                </div>
+
+                                                <div id="barcelos">
+                                                    <span>BARCELOS</span>
+                                                    <span id ="valor-aplicacao-barcelos" class="space-table"></span>
+                                                </div>
+                                                <div id="barreirinha">
+                                                    <span>BARREIRINHA</span>
+                                                    <span id="valor-aplicacao-barreirinha" class="space-table"></span>
+                                                </div>
+                                                <div id="benjconstant">
+                                                    <span>BENJAMIN CONSTANT</span>
+                                                    <span id="valor-aplicacao-benjconstant" class="space-table"></span>
+                                                </div>
+                                                <div id="beruri">
+                                                    <span>BERURI</span>
+                                                    <span id="valor-aplicacao-beruri" class="space-table"></span>
+                                                </div>
+                                                <div id="borba">
+                                                    <span>BORBA</span>
+                                                    <span id="valor-aplicacao-borba" class="space-table"></span>
+                                                </div>
+                                                <div id="caapiranga">
+                                                    <span>CAAPIRANGA</span>
+                                                    <span id="valor-aplicacao-caapiranga" class="space-table"></span>
+                                                </div>
+                                                <div id="canutama">
+                                                    <span>CANUTAMA</span>
+                                                    <span id="valor-aplicacao-canutama" class="space-table"></span>
+                                                </div>
+                                                <div id="carauari">
+                                                    <span>CARAUARI</span>
+                                                    <span id="valor-aplicacao-carauari" class="space-table"></span>
+                                                </div>
+                                                <div id="coari">
+                                                    <span>COARI</span>
+                                                    <span id="valor-aplicacao-coari" class="space-table"></span>
+                                                </div>
+                                                <div id="envira">
+                                                    <span>ENVIRA</span>
+                                                    <span id="valor-aplicacao-envira" class="space-table"></span>
+                                                </div>
+                                                <div id="fonteboa">
+                                                    <span>FONTE BOA</span>
+                                                    <span id="valor-aplicacao-fonteboa" class="space-table"></span>
+                                                </div>
+                                                <div id="humaita">
+                                                    <span>HUMAITÁ</span>
+                                                    <span id="valor-aplicacao-humaita" class="space-table"></span>
+                                                </div>
+                                                <div id="iranduba">
+                                                    <span>IRANDUBA</span>
+                                                    <span id="valor-aplicacao-iranduba" class="space-table"></span>
+                                                </div>
+                                                <div id="itacoatiara">
+                                                    <span>ITACOATIARA</span>
+                                                    <span id="valor-aplicacao-itacoatiara" class="space-table"></span>
+                                                </div>
+                                                <div id="labrea">
+                                                    <span>LÁBREA</span>
+                                                    <span id="valor-aplicacao-labrea" class="space-table"></span>
+                                                </div>
+                                                <div id="manacapuru">
+                                                    <span>MANACAPURU</span>
+                                                    <span id="valor-aplicacao-manacapuru" class="space-table"></span>
+                                                </div>
+                                                <div id="manaquiri">
+                                                    <span>MANAQUIRI</span>
+                                                    <span id="valor-aplicacao-manaquiri" class="space-table"></span>
+                                                </div>
+                                                <div id="manaus">
+                                                    <span>MANAUS</span>
+                                                    <span id="valor-aplicacao-manaus" class="space-table"></span>
+                                                </div>
+                                                <div id="manicore">
+                                                    <span>MANICORÉ</span>
+                                                    <span id="valor-aplicacao-manicore" class="space-table"></span>
+                                                </div>
+                                                <div id="maraa">
+                                                    <span>MARAÃ</span>
+                                                    <span id="valor-aplicacao-maraa" class="space-table"></span>
+                                                </div>
+                                                <div id="maues">
+                                                    <span>MAUÉS</span>
+                                                    <span id="valor-aplicacao-maues" class="space-table"></span>
+                                                </div>
+                                                <div id="nhamunda">
+                                                    <span>NHAMUNDÁ</span>
+                                                    <span id="valor-aplicacao-nhamunda" class="space-table"></span>
+                                                </div>
+                                                <div id="presfigueiredo">
+                                                    <span>PRESIDENTE FIGUEIREDO</span>
+                                                    <span id="valor-aplicacao-presfigueiredo" class="space-table-nomesgrandes"></span>
+                                                </div>
+                                                <div id="riopretodaeva">
+                                                    <span>RIO PRETO DA EVA</span>
+                                                    <span id="valor-aplicacao-riopretodaeva" class="space-table"></span>
+                                                </div>
+                                                <div id="tabatinga">
+                                                    <span>TABATINGA</span>
+                                                    <span id="valor-aplicacao-tabatinga" class="space-table"></span>
+                                                </div>
+                                                <div id="urucara">
+                                                    <span>URUCARÁ</span>
+                                                    <span id="valor-aplicacao-urucara" class="space-table"></span>
+                                                </div>
                                                 
                                             </form>
                                             <canvas id="topApplicationsChart" width="200" height="150"></canvas>
@@ -220,34 +301,118 @@
                                     <div class="chart-container">
                                         <div class="chart-title">RESGATES</div>
                                         <div class="chart-placeholder tabela-resgate-aplicacao">
-                                            <form action="">
-                                                <div>AMAZONPREV</div>
-                                                <div>BARCELOS</div>
-                                                <div>BARREIRINHA</div>
-                                                <div >BENJAMIN CONSTANT</div>
-                                                <div>BERURI</div>
-                                                <div>BORBA</div>
-                                                <div>CAAPIRANGA</div>
-                                                <div>CANUTAMA</div>
-                                                <div>CARAUARI</div>
-                                                <div>COARI</div>
-                                                <div>ENVIRA</div>
-                                                <div>FONTE BOA</div>
-                                                <div>HUMAITÁ</div>
-                                                <div>IRANDUBA</div>
-                                                <div>ITACOATIARA</div>
-                                                <div>LÁBREA</div>
-                                                <div>MANACAPURU</div>
-                                                <div>MANAQUIRI</div>
-                                                <div>MANAUS</div>
-                                                <div>MANICORÉ</div>
-                                                <div>MARAÃ</div>
-                                                <div>MAUÉS</div>
-                                                <div>NHAMUNDÁ</div>
-                                                <div>PRESIDENTE FIGUEIREDO</div>
-                                                <div>RIO PRETO DA EVA</div>
-                                                <div>TABATINGA</div>
-                                                <div>URUCARÁ</div>
+                                            <form id="table-data" >
+                                                <div id="amazonprevr">
+                                                    <span>AMAZONPREV</span>
+                                                    <span id="valor-resgate-amazonprevr" class="space-table"></span>
+                                                </div>
+
+                                                <div id="barcelosr">
+                                                    <span>BARCELOS</span>
+                                                    <span id ="valor-resgate-barcelosr" class="space-table"></span>
+                                                </div>
+                                                <div id="barreirinhar">
+                                                    <span>BARREIRINHA</span>
+                                                    <span id="valor-resgate-barreirinhar" class="space-table"></span>
+                                                </div>
+                                                <div id="benjconstantr">
+                                                    <span>BENJAMIN CONSTANT</span>
+                                                    <span id="valor-resgate-benjconstantr" class="space-table"></span>
+                                                </div>
+                                                <div id="berurir">
+                                                    <span>BERURI</span>
+                                                    <span id="valor-resgate-berurir" class="space-table"></span>
+                                                </div>
+                                                <div id="borbar">
+                                                    <span>BORBA</span>
+                                                    <span id="valor-resgate-borbar" class="space-table"></span>
+                                                </div>
+                                                <div id="caapirangar">
+                                                    <span>CAAPIRANGA</span>
+                                                    <span id="valor-resgate-caapirangar" class="space-table"></span>
+                                                </div>
+                                                <div id="canutamar">
+                                                    <span>CANUTAMA</span>
+                                                    <span id="valor-resgate-canutamar" class="space-table"></span>
+                                                </div>
+                                                <div id="carauarir">
+                                                    <span>CARAUARI</span>
+                                                    <span id="valor-resgate-carauarir" class="space-table"></span>
+                                                </div>
+                                                <div id="coarir">
+                                                    <span>COARI</span>
+                                                    <span id="valor-resgate-coarir" class="space-table"></span>
+                                                </div>
+                                                <div id="envirar">
+                                                    <span>ENVIRA</span>
+                                                    <span id="valor-resgate-envirar" class="space-table"></span>
+                                                </div>
+                                                <div id="fonteboar">
+                                                    <span>FONTE BOA</span>
+                                                    <span id="valor-resgate-fonteboar" class="space-table"></span>
+                                                </div>
+                                                <div id="humaitars">
+                                                    <span>HUMAITÁ</span>
+                                                    <span id="valor-resgate-humaitar" class="space-table"></span>
+                                                </div>
+                                                <div id="irandubar">
+                                                    <span>IRANDUBA</span>
+                                                    <span id="valor-resgate-irandubar" class="space-table"></span>
+                                                </div>
+                                                <div id="itacoatiarar">
+                                                    <span>ITACOATIARA</span>
+                                                    <span id="valor-resgate-itacoatiarar" class="space-table"></span>
+                                                </div>
+                                                <div id="labrear">
+                                                    <span>LÁBREA</span>
+                                                    <span id="valor-resgate-labrear" class="space-table"></span>
+                                                </div>
+                                                <div id="manacapurur">
+                                                    <span>MANACAPURU</span>
+                                                    <span id="valor-resgate-manacapurur" class="space-table"></span>
+                                                </div>
+                                                <div id="manaquirir">
+                                                    <span>MANAQUIRI</span>
+                                                    <span id="valor-resgate-manaquirir" class="space-table"></span>
+                                                </div>
+                                                <div id="manausr">
+                                                    <span>MANAUS</span>
+                                                    <span id="valor-resgate-manausr" class="space-table"></span>
+                                                </div>
+                                                <div id="manicorer">
+                                                    <span>MANICORÉ</span>
+                                                    <span id="valor-resgate-manicorer" class="space-table"></span>
+                                                </div>
+                                                <div id="maraar">
+                                                    <span>MARAÃ</span>
+                                                    <span id="valor-resgate-maraar" class="space-table"></span>
+                                                </div>
+                                                <div id="mauesr">
+                                                    <span>MAUÉS</span>
+                                                    <span id="valor-resgate-mauesr" class="space-table"></span>
+                                                </div>
+                                                <div id="nhamundar">
+                                                    <span>NHAMUNDÁ</span>
+                                                    <span id="valor-resgate-nhamundar" class="space-table"></span>
+                                                </div>
+                                                <div id="presfigueiredor">
+                                                    <span>PRES. FIGUEIREDO</span>
+                                                    <span id="valor-resgate-presfigueiredor" class="space-table-nomesgrandes"></span>
+                                                </div>
+                                                <div id="riopretodaevar">
+                                                    <span>RIO PRETO DA EVA</span>
+                                                    <span id="valor-resgate-riopretodaevar" class="space-table"></span>
+                                                </div>
+                                                <div id="tabatingar">
+                                                    <span>TABATINGA</span>
+                                                    <span id="valor-resgate-tabatingar" class="space-table"></span>
+                                                </div>
+                                                <div id="urucarar">
+                                                    <span>URUCARÁ</span>
+                                                    <span id="valor-resgate-urucarar" class="space-table"></span>
+                                                </div>
+                                                
+                                            </form>
                                                 
                                                 
                                             </form>

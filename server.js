@@ -182,34 +182,45 @@ app.get('/proxy/governanca', async (req, res) => {
 
 /*relatorio mensal(mes e ano)*/
 app.get('/proxy/relatoriomensal', async (req, res) => {
-  console.log('Query recebida(RELATÓRIO MENSAL): ', req.query);
-  const { sg_uf='AM', dt_mes, dt_ano } = req.query;
-  console.log('sg_uf:', sg_uf, '|dt_mes:', dt_mes, '|dt_ano:', dt_ano);
-
+  const { sg_uf = 'AM', dt_mes, dt_ano } = req.query;
 
   if (!dt_mes || !dt_ano) {
-    return res.status(400).json({ 
-      error: `O parâmetro 'no_ente' e 'dt_ano' é obrigatório.`});
+    return res.status(400).json({ error: `Parâmetros 'dt_mes' e 'dt_ano' são obrigatórios.` });
   }
 
-  const baseUrl=`https://apicadprev.trabalho.gov.br/DAIR_APLICACOES_RESGATE`;
-  const params = new URLSearchParams({sg_uf, dt_mes, dt_ano});
+  const baseUrl = `https://apicadprev.trabalho.gov.br/DAIR_APLICACOES_RESGATE`;
+  const params = new URLSearchParams({ sg_uf, dt_mes, dt_ano });
+  const url = `${baseUrl}?${params.toString()}`;
 
+  console.log("URL FINAL:", url);
 
-  const url =`${baseUrl}?${params.toString()}`;
-  console.log('URL FINAL', url);
   try {
     const response = await axios.get(url);
-    const dataprev=res.json(response.data);
-    console.log(dataprev);
+    const dados = response.data;
+
+    const totaisPorMunicipio = {};
+
+    for (const item of dados) {
+      const municipio = item.no_ente?.toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      const tipo = item.tp_operacao?.toUpperCase();
+
+      // Somar apenas se for aplicação (evita resgates, que podem ser negativos)
+      if (tipo && tipo.includes("APLICACAO")) {
+        if (!totaisPorMunicipio[municipio]) {
+          totaisPorMunicipio[municipio] = 0;
+        }
+        totaisPorMunicipio[municipio] += item.vl_operacao || 0;
+      }
+    }
+
+    res.json(totaisPorMunicipio);
   } catch (error) {
-    console.error('Erro no proxy: ', error.message);
-    const statusCode = error.response?.status || 500;
-    res.status(statusCode).json({
-      error: 'Erro ao consultar a API externa.'
-    });
+    console.error('Erro ao buscar API externa:', error.message);
+    const status = error.response?.status || 500;
+    res.status(status).json({ error: 'Erro ao consultar a API externa.' });
   }
 });
+
 app.listen(PORT, () => {
   console.log(`Servidor Node.js rodando em http://localhost:${PORT}`);
 });

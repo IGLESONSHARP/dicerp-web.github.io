@@ -68,9 +68,9 @@ const municipios2 = {
   };
 const valor= 12335;
 
-document.getElementById('form').addEventListener('submit', async function (e) {
+document.getElementById('table-data').addEventListener('submit', async function (e) {
   e.preventDefault();
-  const sg_uf = 'AM';
+
   const dt_mes = document.getElementById('dt_mes').value.trim();
   const dt_ano = document.getElementById('dt_ano').value.trim();
 
@@ -84,7 +84,14 @@ document.getElementById('form').addEventListener('submit', async function (e) {
     resultado.innerHTML = '';
     return;
   }
+
+
+
+  const sg_uf = 'AM';
+
+
   
+
   for (const [id, nome] of Object.entries(municipios2)) {
     const div = document.getElementById(id);
     if (div) {
