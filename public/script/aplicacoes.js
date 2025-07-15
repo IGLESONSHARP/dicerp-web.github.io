@@ -40,8 +40,8 @@ document.getElementById('form1').addEventListener('submit', async function(e) {
 
      if (Array.isArray(resultadoData) && resultadoData.length > 0) {
       // ✅ Mostra o CNPJ da entidade uma vez
-      const primeiroItem = resultadoData[0];
-      const segundoItem = resultadoData[1];
+      const primeiroItem = resultadoData[0]; /*cnpj*/
+      const segundoItem = resultadoData[1]; /*uf*/
 
       const estadoEntidade= getEstadoSigla(segundoItem) || 'N/A';
 

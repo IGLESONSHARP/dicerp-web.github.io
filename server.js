@@ -196,28 +196,23 @@ app.get('/proxy/relatoriomensal', async (req, res) => {
 
   try {
     const response = await axios.get(url);
-    const dados = response.data;
+    const data = response.data;
 
-    const totaisPorMunicipio = {};
-
-    for (const item of dados) {
-      const municipio = item.no_ente?.toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-      const tipo = item.tp_operacao?.toUpperCase();
-
-      // Somar apenas se for aplicação (evita resgates, que podem ser negativos)
-      if (tipo && tipo.includes("APLICACAO")) {
-        if (!totaisPorMunicipio[municipio]) {
-          totaisPorMunicipio[municipio] = 0;
-        }
-        totaisPorMunicipio[municipio] += item.vl_operacao || 0;
-      }
-    }
-
-    res.json(totaisPorMunicipio);
+    res.json(data);
   } catch (error) {
-    console.error('Erro ao buscar API externa:', error.message);
-    const status = error.response?.status || 500;
-    res.status(status).json({ error: 'Erro ao consultar a API externa.' });
+
+    if (error.response) {
+      console.error('Erro resposta API externa:', error.response.data);
+      res.status(error.response.status).json({
+
+        error: 'Erro na API externa',
+        detalhes: error.response.data
+      });
+      } else {
+        console.error('Erro no proxy:', error.message);
+        res.status(500).json({ error: 'Erro interno no servidor proxy' });
+      }
+
   }
 });
 

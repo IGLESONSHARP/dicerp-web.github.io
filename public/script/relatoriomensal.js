@@ -1,14 +1,15 @@
 
 const municipioscall = [
-  "AMAZONPREV", "BARCELOS", "BARREIRINHA", "BENJAMIN CONSTANT", "BERURI",
-  "BORBA", "CAAPIRANGA", "CANUTAMA", "CARAUARI", "COARI", "ENVIRA", "FONTE BOA",
-  "HUMAITÁ", "IRANDUBA", "ITACOATIARA", "LÁBREA", "MANACAPURU", "MANAQUIRI",
-  "MANAUS", "MANICORÉ", "MARAÃ", "MAUÉS", "NHAMUNDÁ", "PRES. FIGUEIREDO",
-  "RIO PRETO DA EVA", "TABATINGA", "URUCARÁ"
+  "Governo do Estado do Amazonas", "Barcelos", "Barreirinha", "Benjamin constant", "Beruri",
+"Borba", "Caapiranga", "Canutama", "Carauari", "Coari", "Envira", "Fonte boa",
+"Humaitá", "Iranduba", "Itacoatiara", "Lábrea", "Manacapuru", "Manaquiri",
+"Manaus", "Manicoré", "Maraã", "Maués", "Nhamundá", "Presidente figueiredo",
+"Rio Preto da Eva", "Tabatinga", "Urucará"
+
 ];
 
 const municipios2 = {
-    amazonprev: 'AMAZONPREV',
+    amazonprev: 'GOVERNO DO ESTADO DO AMAZONAS',
     barcelos: 'BARCELOS',
     barreirinha: 'BARREIRINHA',
     benjconstant: 'BENJAMIN CONSTANT',
@@ -31,14 +32,14 @@ const municipios2 = {
     maraa: 'MARAÃ',
     maues: 'MAUÉS',
     nhamunda: 'NHAMUNDÁ',
-    presfigueiredo: 'PRES. FIGUEIREDO',
+    presfigueiredo: 'PRESIDENTE FIGUEIREDO',
     riopretodaeva: 'RIO PRETO DA EVA',
     tabatinga: 'TABATINGA',
     urucara: 'URUCARÁ'
   };
 
   const municipios3 = {
-    amazonprevr: 'AMAZONPREV',
+    amazonprevr: 'GOVERNO DO ESTADO DO AMAZONAS',
     barcelosr: 'BARCELOS',
     barreirinhar: 'BARREIRINHA',
     benjconstantr: 'BENJAMIN CONSTANT',
@@ -61,72 +62,30 @@ const municipios2 = {
     maraar: 'MARAÃ',
     mauesr: 'MAUÉS',
     nhamundar: 'NHAMUNDÁ',
-    presfigueiredor: 'PRES. FIGUEIREDO',
+    presfigueiredor: 'PRESIDENTE FIGUEIREDO',
     riopretodaevar: 'RIO PRETO DA EVA',
     tabatingar: 'TABATINGA',
     urucarar: 'URUCARÁ'
   };
-const valor= 12335;
+
 
 document.getElementById('form').addEventListener('submit', async function (e) {
   e.preventDefault();
+
   const sg_uf = 'AM';
   const dt_mes = document.getElementById('dt_mes').value.trim();
   const dt_ano = document.getElementById('dt_ano').value.trim();
-
-  const resultado = document.querySelector('#resultado');
-  
-  resultado.innerHTML = 'Carregando...';
-  tabela.innerHTML = '';
-  if (cnpjDiv) cnpjDiv.innerHTML = '';
-
-  if (!no_ente) {
-    resultado.innerHTML = '';
-    return;
-  }
-  
-  for (const [id, nome] of Object.entries(municipios2)) {
-    const div = document.getElementById(id);
-    if (div) {
-      div.innerHTML = `${nome} <span style="margin-left: 40px;">${valor}</span>`;
-      const el = document.getElementById(`valor-aplicacao-${municipios2}`);
-      if (el) el.textContent = valor;
-    }
-  }
-  for (const [id, nome] of Object.entries(municipios3)) {
-    const div = document.getElementById(id);
-    if (div) {
-      div.innerHTML = `${nome} <span style="margin-left: 40px;">${valor}</span>`;
-      const el = document.getElementById(`valor-resgate-${municipios3}`);
-      if (el) el.textContent = valor;
-    }
-  }
+  const resultado = document.getElementById('resultado');
 
 
-  if(!resultado)
-  {
-    console.error("Elemento com id 'resultado' não foi encontrado no DOM.");
-    return;
-  }
+  const baseUrl = `http://localhost:3000/proxy/relatoriomensal?sg_uf=${encodeURIComponent(sg_uf)}&dt_mes=${encodeURIComponent(dt_mes)}&dt_ano=${encodeURIComponent(dt_ano)}`;
+  const url = `${baseUrl}`;
 
+  console.log("url front final:", url);
 
-  inputs.forEach(input =>{
-    const nome = input.name;
-    const valor = input.value.trim();
-    if(nome && valor !== '')
-    {
-      params.append(nome, valor);
-    }
-  });
-
-  resultado.innerHTML = 'Carregando...';
 
   try {
-    const baseUrl = `http://localhost:3000/proxy/relatoriomensal?sg_uf=${encodeURIComponent(sg_uf)}&dt_mes=${encodeURIComponent(dt_mes)}&dt_ano=${encodeURIComponent(dt_ano)}`;
-    const url = `${baseUrl}?${params.toString()}`;
-
-    console.log("Consultando URL: ", url );
- 
+    console.log("Consultando URL: ", url);
     const response = await fetch(url);
 
     const contentType = response.headers.get("content-type");
@@ -138,18 +97,139 @@ document.getElementById('form').addEventListener('submit', async function (e) {
     }
 
     const data = await response.json();
-   
-    if (data && Array.isArray(data.results) & data.results.length > 0) {
-      resultado.innerHTML = `<pre>${JSON.stringify(data.results, null, 2)}</pre>`;
-    } else {
-      resultado.textContent = 'Nenhum dado encontrado para os paramentros informados.';
+    /*console.log("DATA:", data); mostra todas os vetores da API conforme o que foi buscado no html*/
+    const resultadoData = data?.results?.[0]?.data;
+    console.log("vetores:", resultadoData);
+    const quant = Array.isArray(resultadoData) ? resultadoData.length : 0; /*quantidade de vetores encontrados na API*/
+    console.log("quantidade vetores encontrados:", quant);
+
+    if (!Array.isArray(resultadoData)) {
+      console.warn("Dados inválidos ou não encontrados.");
+      return;
     }
+/*tabela aplicações*/
+    // Agrupador de soma por no_ente
+    const somaPorEnte = {};
+
+    for (const item of resultadoData) {
+      const nome = item?.no_ente?.trim();
+      const valor = parseFloat(item?.vl_operacao) || 0;
+      const temQuantidade = item?.vl_quantidade_apos !== undefined && item.vl_quantidade_apos !== null;
+
+      // Se for negativo e tem quantidade, é resgate → não soma
+      if (valor < 0 && temQuantidade) {
+        continue;
+      }
+
+      if (nome) {
+        if (!somaPorEnte[nome]) {
+          somaPorEnte[nome] = 0;
+        }
+        somaPorEnte[nome] += valor;
+      }
+    }
+
+    // Exibir resultados
+    console.log("Soma das aplicações por município (ignorando aplicações):");
+
+    for (const [id, nome] of Object.entries(municipios2)) {
+      const chaveNormalizada = normalizarNome(nome);
+
+      // Encontrar o nome correspondente na somaPorEnte (API)
+      const municipioCorrespondente = Object.keys(somaPorEnte).find(key =>
+        normalizarNome(key) === chaveNormalizada
+      );
+
+      // Se não encontrado, considera 0
+      const total = municipioCorrespondente ? somaPorEnte[municipioCorrespondente] : 0;
+
+      const div = document.getElementById(id);
+      if (div) {
+        div.innerHTML = `${nome} <span style="margin-left: 20px;">${abreviarValor(total)}</span>`;
+      }
+
+      const el = document.getElementById(`valor-aplicacao-${id}`);
+      if (el) {
+        el.textContent = abreviarValor(total);
+      }
+
+      console.log(`${nome}: ${total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`);
+    }
+/*tabela resgates*/
+    const somaResgatesPorEnte = {};
+
+  for (const item of resultadoData) {
+    const nome = item?.no_ente?.trim();
+    const valor = parseFloat(item?.vl_operacao) || 0;
+    const temQuantidadeApos = item?.quantidade_apos !== undefined && item.quantidade_apos !== null;
+
+    // Considera apenas RESGATES (valor negativo E tem quantidade_apos)
+    if (valor < 0 && temQuantidadeApos && nome) {
+      if (!somaResgatesPorEnte[nome]) {
+        somaResgatesPorEnte[nome] = 0;
+      }
+      somaResgatesPorEnte[nome] += valor;
+    }
+  }
+
+
+    console.log("Soma dos resgates por município (ignorando aplicacões):");
+
+    for (const [id, nome] of Object.entries(municipios3)) {
+      const chaveNormalizada = normalizarNome(nome);
+
+      const municipioCorrespondente = Object.keys(somaResgatesPorEnte).find(key =>
+        normalizarNome(key) === chaveNormalizada
+      );
+
+      const total = municipioCorrespondente ? somaResgatesPorEnte[municipioCorrespondente] : 0;
+
+      const div = document.getElementById(id);
+      if (div) {
+        div.innerHTML = `${nome} <span style="margin-left: 20px;">${abreviarValor(Math.abs(total))}</span>`;
+      }
+
+      const el = document.getElementById(`valor-resgate-${id}`);
+      if (el) {
+        el.textContent = abreviarValor(Math.abs(total));
+      }
+
+      console.log(`${nome} (resgate): ${total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`);
+    }
+
+
+
+    /*const primeirotem = resultadoData[0];
+    const valoroperacao = primeirotem.vl_operacao
+    ? Number(primeirotem.vl_operacao).toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL'
+    })
+    : '-'; primeiro vetor com o parametros em reais de valor de oepração*/
+    if (Array.isArray(resultadoData) && resultadoData.length > 0) {
+      const valor_aplicacao = resultadoData[16];
+
+      const valor_aplicacao_reais = valor_aplicacao.vl_operacao
+        ? Number(valor_aplicacao.vl_operacao).toLocaleString('pt-BR', {
+            style: 'currency',
+            currency: 'BRL'
+          })
+        : 'N/A';
+
+      const spanAmazonprev = document.getElementById('valor-aplicacao-amazonprev');
+      if (spanAmazonprev) {
+        spanAmazonprev.textContent = valor_aplicacao_reais; // Corrigido aqui
+      }
+    }
+
   } catch (err) {
     console.error('Erro:', err);
     resultado.textContent = 'Erro ao consultar dados.';
   }
 });
+
 /*tabela aplicação e resgates*/
+
 
 
 
@@ -392,4 +472,30 @@ function numeroParaMes(numero)
   } else {
     return "Mês Inválido";
   }
+}
+
+function normalizarNome(str) {
+  return str
+    .normalize("NFD") // remove acentos
+    .replace(/[\u0300-\u036f]/g, "") // remove restos dos acentos
+    .replace(/\s+/g, '') // remove espaços
+    .toUpperCase(); // padroniza em caixa alta
+}
+
+function abreviarValor(valor) {
+  const absValor = Math.abs(valor);
+  let abreviado = '';
+
+  if (absValor >= 1_000_000_000) {
+    abreviado = (valor / 1_000_000_000).toFixed(2).replace('.', ',') + 'B';
+  } else if (absValor >= 1_000_000) {
+    abreviado = (valor / 1_000_000).toFixed(2).replace('.', ',') + 'M';
+  } else if (absValor >= 1_000) {
+    abreviado = (valor / 1_000).toFixed(2).replace('.', ',') + 'K';
+  } else {
+    abreviado = valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    return abreviado; // não adiciona "R$" de novo abaixo
+  }
+
+  return `R$ ${abreviado}`;
 }
