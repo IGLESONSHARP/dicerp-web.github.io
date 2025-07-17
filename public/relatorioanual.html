@@ -70,7 +70,7 @@
             <form id="form3" class="bottom-group">
                 <select id="no_ente"  name="no_ente">
                     <option value="">ESCOLHA UM MUNICÍPIO</option>
-                    <option value="Amazonas">AMAZONAS</option>
+                    <option value="Governo do Estado do Amazonas">AMAZONAS</option>
                     <option value="Barcelos">Barcelos-AM</option>
                     <option value="Barreirinha">Barreirinha-AM</option>
                     <option value="Benjamin Constant">Benjamin Constant-AM</option>
@@ -99,7 +99,7 @@
                     <option value="Urucará">Urucará-AM</option>
                 </select>
                 
-                <select name="dt_ano" id="">
+                <select name="dt_ano" id="dt_ano">
                     <option value="">ESCOLHA UM ANO</option>
                     <option value="2020">2020</option>
                     <option value="2021">2021</option>
@@ -165,13 +165,13 @@
                 <!-- Aplicações -->
                     <div class="chart-container-APR">
                         <div class="chart-title1">APLICAÇÕES</div>
-                        <div class="red-chart">R$ 2.450.000</div>
+                        <div class="red-chart" id="soma_aplicacoes">R$ ?</div>
                     </div>
 
                     <!-- Resgates -->
                     <div class="chart-container-APR">
                         <div class="chart-title1">RESGATES</div>
-                        <div class="red-chart">R$ 1.850.000</div>
+                        <div class="red-chart" id="soma_resgates">R$ ?</div>
                     </div>
 
                     <!-- Segmento -->
@@ -203,51 +203,51 @@
                     <div class="values-display">
                         
                         <div class="value-item">
-                            <div class="value-number">R$ 1.2M</div>
+                            <div class="value-number" id="janA">R$ 1.2M</div>
                             <div>Jan</div>
                         </div>
                         <div class="value-item">
-                            <div class="value-number">R$ 980K</div>
+                            <div class="value-number" id="fevA">R$ 980K</div>
                             <div>Fev</div>
                         </div>
                         <div class="value-item">
-                            <div class="value-number">R$ 750K</div>
+                            <div class="value-number" id="marA">R$ 750K</div>
                             <div>Mar</div>
                         </div>
                         <div class="value-item">
-                            <div class="value-number">R$ 1.2M</div>
+                            <div class="value-number" id="abrA">R$ 1.2M</div>
                             <div>Abr</div>
                         </div>
                         <div class="value-item">
-                            <div class="value-number">R$ 980K</div>
+                            <div class="value-number" id="maiA">R$ 980K</div>
                             <div>Mai</div>
                         </div>
                         <div class="value-item">
-                            <div class="value-number">R$ 750K</div>
+                            <div class="value-number" id="junA">R$ 750K</div>
                             <div>Jun</div>
                         </div>
                         <div class="value-item">
-                            <div class="value-number">R$ 1.2M</div>
+                            <div class="value-number" id="julA">R$ 1.2M</div>
                             <div>Jul</div>
                         </div>
                         <div class="value-item">
-                            <div class="value-number">R$ 980K</div>
+                            <div class="value-number" id="agoA">R$ 980K</div>
                             <div>Ago</div>
                         </div>
                         <div class="value-item">
-                            <div class="value-number">R$ 750K</div>
+                            <div class="value-number" id="setA">R$ 750K</div>
                             <div>Set</div>
                         </div>
                         <div class="value-item">
-                            <div class="value-number">R$ 1.2M</div>
+                            <div class="value-number" id="outA">R$ 1.2M</div>
                             <div>Out</div>
                         </div>
                         <div class="value-item">
-                            <div class="value-number">R$ 980K</div>
+                            <div class="value-number" id="novA">R$ 980K</div>
                             <div>Nov</div>
                         </div>
                         <div class="value-item">
-                            <div class="value-number">R$ 750K</div>
+                            <div class="value-number" id="dezA">R$ 750K</div>
                             <div>Dez</div>
                         </div>
                         
@@ -259,51 +259,51 @@
                     <canvas id="barChart2"></canvas>
                     <div class="values-display">
                         <div class="value-item">
-                            <div class="value-number">R$ 1.2M</div>
+                            <div class="value-number" id="janR">?</div>
                             <div>Jan</div>
                         </div>
                         <div class="value-item">
-                            <div class="value-number">R$ 980K</div>
+                            <div class="value-number" id="fevR">?</div>
                             <div>Fev</div>
                         </div>
                         <div class="value-item">
-                            <div class="value-number">R$ 750K</div>
+                            <div class="value-number" id="marR">?</div>
                             <div>Mar</div>
                         </div>
                         <div class="value-item">
-                            <div class="value-number">R$ 1.2M</div>
+                            <div class="value-number" id="abrR">R$ 1.2M</div>
                             <div>Abr</div>
                         </div>
                         <div class="value-item">
-                            <div class="value-number">R$ 980K</div>
+                            <div class="value-number" id="maiR">R$ 980K</div>
                             <div>Mai</div>
                         </div>
                         <div class="value-item">
-                            <div class="value-number">R$ 750K</div>
+                            <div class="value-number" id="junR">R$ 750K</div>
                             <div>Jun</div>
                         </div>
                         <div class="value-item">
-                            <div class="value-number">R$ 1.2M</div>
+                            <div class="value-number" id="julR">R$ 1.2M</div>
                             <div>Jul</div>
                         </div>
                         <div class="value-item">
-                            <div class="value-number">R$ 980K</div>
+                            <div class="value-number" id="agoR">R$ 980K</div>
                             <div>Ago</div>
                         </div>
                         <div class="value-item">
-                            <div class="value-number">R$ 750K</div>
+                            <div class="value-number" id="setR">R$ 750K</div>
                             <div>Set</div>
                         </div>
                         <div class="value-item">
-                            <div class="value-number">R$ 1.2M</div>
+                            <div class="value-number" id="outR">R$ 1.2M</div>
                             <div>Out</div>
                         </div>
                         <div class="value-item">
-                            <div class="value-number">R$ 980K</div>
+                            <div class="value-number" id="novR">R$ 980K</div>
                             <div>Nov</div>
                         </div>
                         <div class="value-item">
-                            <div class="value-number">R$ 750K</div>
+                            <div class="value-number" id="dezR">R$ 750K</div>
                             <div>Dez</div>
                         </div>
                     </div>

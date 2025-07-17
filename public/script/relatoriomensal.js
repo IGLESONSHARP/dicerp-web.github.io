@@ -102,31 +102,41 @@ document.getElementById('form').addEventListener('submit', async function (e) {
     console.log("vetores:", resultadoData);
     const quant = Array.isArray(resultadoData) ? resultadoData.length : 0; /*quantidade de vetores encontrados na API*/
     console.log("quantidade vetores encontrados:", quant);
+    const div = document.getElementById('n_operacoes');
+    div.innerHTML = quant;
 
     if (!Array.isArray(resultadoData)) {
       console.warn("Dados inválidos ou não encontrados.");
       return;
     }
 /*tabela aplicações*/
+    const municipiosA = [];
+    const valoresAplicacoes =[];
+    const coresAplicacoes = [];
     // Agrupador de soma por no_ente
-    const somaPorEnte = {};
+    const somaAplicacaoPorEnte = {};
+    let totalAplicacoes = 0;
 
     for (const item of resultadoData) {
       const nome = item?.no_ente?.trim();
       const valor = parseFloat(item?.vl_operacao) || 0;
-      const temQuantidade = item?.vl_quantidade_apos !== undefined && item.vl_quantidade_apos !== null;
+      const temQuantidade = parseFloat(item?.vl_quantidade_apos);
 
       // Se for negativo e tem quantidade, é resgate → não soma
-      if (valor < 0 && temQuantidade) {
-        continue;
-      }
-
-      if (nome) {
-        if (!somaPorEnte[nome]) {
-          somaPorEnte[nome] = 0;
+      if (temQuantidade > 0 ) {
+        if (!somaAplicacaoPorEnte[nome]) {
+          somaAplicacaoPorEnte[nome] = 0;
+          
         }
-        somaPorEnte[nome] += valor;
+        somaAplicacaoPorEnte[nome] += valor;
+
+        totalAplicacoes ++;
+        
       }
+    }
+    const divTotalAplicacoes = document.getElementById('n_aplicacoes');
+    if (divTotalAplicacoes) {
+      divTotalAplicacoes.textContent = totalAplicacoes.toString();
     }
 
     // Exibir resultados
@@ -136,16 +146,19 @@ document.getElementById('form').addEventListener('submit', async function (e) {
       const chaveNormalizada = normalizarNome(nome);
 
       // Encontrar o nome correspondente na somaPorEnte (API)
-      const municipioCorrespondente = Object.keys(somaPorEnte).find(key =>
+      const municipioCorrespondente = Object.keys(somaAplicacaoPorEnte).find(key =>
         normalizarNome(key) === chaveNormalizada
       );
 
       // Se não encontrado, considera 0
-      const total = municipioCorrespondente ? somaPorEnte[municipioCorrespondente] : 0;
+      const total = municipioCorrespondente ? somaAplicacaoPorEnte[municipioCorrespondente] : 0;
+      municipiosA.push(nome);
+      valoresAplicacoes.push(total);
+      coresAplicacoes.push(gerarCorAleatoria());
 
       const div = document.getElementById(id);
       if (div) {
-        div.innerHTML = `${nome} <span style="margin-left: 20px;">${abreviarValor(total)}</span>`;
+        div.innerHTML = `${nome} <span style="margin-left: 10px; background-color: green">${abreviarValor(total)}</span>`;
       }
 
       const el = document.getElementById(`valor-aplicacao-${id}`);
@@ -155,49 +168,74 @@ document.getElementById('form').addEventListener('submit', async function (e) {
 
       console.log(`${nome}: ${total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`);
     }
+    aplicacoesChart.data.labels = municipiosA;
+    aplicacoesChart.data.datasets[0].data = valoresAplicacoes;
+    aplicacoesChart.data.datasets[0].backgroundColor = coresAplicacoes;
+    aplicacoesChart.update();
 /*tabela resgates*/
+const municipiosR = [];
+    const valoresResgates =[];
+    const coresResgates = [];
+
     const somaResgatesPorEnte = {};
 
-  for (const item of resultadoData) {
-    const nome = item?.no_ente?.trim();
-    const valor = parseFloat(item?.vl_operacao) || 0;
-    const temQuantidadeApos = item?.quantidade_apos !== undefined && item.quantidade_apos !== null;
+    let totalResgates=0;
 
-    // Considera apenas RESGATES (valor negativo E tem quantidade_apos)
-    if (valor < 0 && temQuantidadeApos && nome) {
-      if (!somaResgatesPorEnte[nome]) {
-        somaResgatesPorEnte[nome] = 0;
+    for (const item of resultadoData) {
+      const nome = item?.no_ente?.trim();
+      const valor = parseFloat(item?.vl_operacao) || 0;
+      const quantidadeApos = parseFloat(item?.vl_quantidade_apos);
+
+      console.log("ente soma", somaResgatesPorEnte);
+      console.log("nome:", nome, "valor:", valor, "quantidade apos:", quantidadeApos);
+      // RESGATE = valor negativo E quantidade_apos negativa
+      if (quantidadeApos < 0 ) {
+        if (!somaResgatesPorEnte[nome]) {
+          somaResgatesPorEnte[nome] = 0;
+        }
+        somaResgatesPorEnte[nome] += valor;
+        totalResgates ++;
       }
-      somaResgatesPorEnte[nome] += valor;
     }
-  }
+
+    const divtotalResgates = document.getElementById("n_resgates");
+    if (divtotalResgates)
+    {
+      divtotalResgates.textContent = totalResgates.toString();
+    }
 
 
     console.log("Soma dos resgates por município (ignorando aplicacões):");
 
-    for (const [id, nome] of Object.entries(municipios3)) {
-      const chaveNormalizada = normalizarNome(nome);
+    for (const [id1, nome1] of Object.entries(municipios3)) {
+      const chaveNormalizada = normalizarNome(nome1);
 
       const municipioCorrespondente = Object.keys(somaResgatesPorEnte).find(key =>
         normalizarNome(key) === chaveNormalizada
       );
 
       const total = municipioCorrespondente ? somaResgatesPorEnte[municipioCorrespondente] : 0;
+      
+      municipiosR.push(nome1);
+      valoresResgates.push(total);
+      coresResgates.push(gerarCorAleatoria());
 
-      const div = document.getElementById(id);
+      const div = document.getElementById(id1);
       if (div) {
-        div.innerHTML = `${nome} <span style="margin-left: 20px;">${abreviarValor(Math.abs(total))}</span>`;
+        div.innerHTML = `${nome1} <span style="margin-left: 10px; background-color: green">${abreviarValor(Math.abs(total))}</span>`;
       }
 
-      const el = document.getElementById(`valor-resgate-${id}`);
+      const el = document.getElementById(`valor-resgate-${id1}`);
       if (el) {
         el.textContent = abreviarValor(Math.abs(total));
       }
 
-      console.log(`${nome} (resgate): ${total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`);
+      console.log(`${nome1} (resgate): ${total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`);
     }
-
-
+    resgatesChartChart.data.labels = municipiosR;
+    resgatesChartChart.data.datasets[0].data = valoresResgates;
+    resgatesChartChart.data.datasets[0].backgroundColor = coresResgates;
+    resgatesChartChart.update();
 
     /*const primeirotem = resultadoData[0];
     const valoroperacao = primeirotem.vl_operacao
@@ -235,7 +273,7 @@ document.getElementById('form').addEventListener('submit', async function (e) {
 
 /*graficos e analises*/
 const monthlyData = {
-  labels: ['AMAZONPREV', 'BARCELOS', 'BARREIRINHA', 'BENJAMIN CONSTANT', 'BERURI', 'BORBA', 'CAAPIRANGA',
+  labels: ['GOVERNO DO ESTADO DO AMAZONAS', 'BARCELOS', 'BARREIRINHA', 'BENJAMIN CONSTANT', 'BERURI', 'BORBA', 'CAAPIRANGA',
   'CANUTAMA', 'CARAURI', 'COARI', 'ENVIRA', 'FONTE BOA', 'HUMAITÁ', 'IRANDUBA',
   'ITACOATIARA', 'LÁBREA', 'MANACAPURU', 'MANAQUIRI', 'MANAUS', 'MANICORÉ', 'MARAÃ',
   'MAUÉS', 'NHAMUNDÁ', 'PRESIDENTE FIGUEIREDO', 'RIO PRETO DA EVA', 'TABATINGA', 'URUCARÁ'],
@@ -257,7 +295,7 @@ const chartOptions = {
   maintainAspectRatio: false,
   scales: {
     y: { beginAtZero: true, max: 8000, ticks: { stepSize: 1000 } },
-    x: { grid: { display: false } }
+    x: { grid: { display: false, } }
   }
 };
 
@@ -265,27 +303,16 @@ const aplicacoesCtx = document.getElementById('aplicacoesChart').getContext('2d'
 const resgatesCtx = document.getElementById('resgatesChart').getContext('2d');
 
 
-const municipios = [
-  'AMAZONPREV', 'BARCELOS', 'BARREIRINHA', 'BENJMANIN CONSTANT', 'BERURI', 'BORBA', 'CAAPIRANGA',
-  'CANUTAMA', 'CARAURI', 'COARI', 'ENVIRA', 'FONTE BOA', 'HUMAITÁ', 'IRANDUBA',
-  'ITACOATIARA', 'LÁBREA', 'MANACAPURU', 'MANAQUIRI', 'MANAUS', 'MANICORÉ', 'MARAÃ',
-  'MAUÉS', 'NHAMUNDÁ', 'PRESIDENTE FIGUEIREDO', 'RIO PRETO DA EVA', 'TABATINGA', 'URUCARÁ'
-];
 
-// Exemplo: valores simulados aleatórios
-const valores = municipios.map(() => Math.floor(Math.random() * 5000) + 1000);
-
-// Cores diferentes para cada barra
-const cores = municipios.map((_, i) => ` hsl(${i * 13}, 70%, 50%)`);
 /*aplicações*/
 const aplicacoesChart = new Chart(aplicacoesCtx, {
   type: 'bar',
   data: {
-    labels: municipios,
+    labels: [],
     datasets: [{
       label: 'VALORES EM REAIS',
-      data: valores,
-      backgroundColor: cores,
+      data: [],
+      backgroundColor: [],
       borderColor: '#333',
       borderWidth: 1
     }]
@@ -334,11 +361,11 @@ const redemptionsData = {
 const resgatesChartChart = new Chart(resgatesCtx, {
   type: 'bar',
   data: {
-    labels: municipios,
+    labels: [],
     datasets: [{
       label: 'VALORES EM REAIS',
-      data: valores,
-      backgroundColor: cores,
+      data: [],
+      backgroundColor: [],
       borderColor: '#333',
       borderWidth: 1
     }]
@@ -498,4 +525,11 @@ function abreviarValor(valor) {
   }
 
   return `R$ ${abreviado}`;
+}
+
+function gerarCorAleatoria() {
+  const r = Math.floor(Math.random() * 156 + 100); // tons mais claros
+  const g = Math.floor(Math.random() * 156 + 100);
+  const b = Math.floor(Math.random() * 156 + 100);
+  return `rgba(${r}, ${g}, ${b}, 0.7)`;
 }

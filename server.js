@@ -216,6 +216,41 @@ app.get('/proxy/relatoriomensal', async (req, res) => {
   }
 });
 
+app.get('/proxy/relatorioanual', async (req, res) => {
+  const { sg_uf = 'AM', no_ente, dt_ano } = req.query;
+
+  if (!no_ente || !dt_ano) {
+    return res.status(400).json({ error: `Parâmetros 'no_ente' e 'dt_ano' são obrigatórios.` });
+  }
+
+  const baseUrl = `https://apicadprev.trabalho.gov.br/DAIR_APLICACOES_RESGATE`;
+  const params = new URLSearchParams({ sg_uf, no_ente, dt_ano });
+  const url = `${baseUrl}?${params.toString()}`;
+
+  console.log("URL FINAL:", url);
+
+  try {
+    const response = await axios.get(url);
+    const data = response.data;
+
+    res.json(data);
+  } catch (error) {
+
+    if (error.response) {
+      console.error('Erro resposta API externa:', error.response.data);
+      res.status(error.response.status).json({
+
+        error: 'Erro na API externa',
+        detalhes: error.response.data
+      });
+      } else {
+        console.error('Erro no proxy:', error.message);
+        res.status(500).json({ error: 'Erro interno no servidor proxy' });
+      }
+
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Servidor Node.js rodando em http://localhost:${PORT}`);
 });

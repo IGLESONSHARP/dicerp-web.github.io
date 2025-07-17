@@ -1,5 +1,272 @@
 /*API servidor*/
 
+const municipioscall = [
+  "Governo do Estado do Amazonas", "Barcelos", "Barreirinha", "Benjamin constant", "Beruri",
+"Borba", "Caapiranga", "Canutama", "Carauari", "Coari", "Envira", "Fonte boa",
+"Humaitá", "Iranduba", "Itacoatiara", "Lábrea", "Manacapuru", "Manaquiri",
+"Manaus", "Manicoré", "Maraã", "Maués", "Nhamundá", "Presidente figueiredo",
+"Rio Preto da Eva", "Tabatinga", "Urucará"
+
+];
+
+const municipios2 = {
+    amazonprev: 'GOVERNO DO ESTADO DO AMAZONAS',
+    barcelos: 'BARCELOS',
+    barreirinha: 'BARREIRINHA',
+    benjconstant: 'BENJAMIN CONSTANT',
+    beruri: 'BERURI',
+    borba: 'BORBA',
+    caapiranga: 'CAAPIRANGA',
+    canutama: 'CANUTAMA',
+    carauari: 'CARAUARI',
+    coari: 'COARI',
+    envira: 'ENVIRA',
+    fonteboa: 'FONTE BOA',
+    humaita: 'HUMAITÁ',
+    iranduba: 'IRANDUBA',
+    itacoatiara: 'ITACOATIARA',
+    labrea: 'LÁBREA',
+    manacapuru: 'MANACAPURU',
+    manaquiri: 'MANAQUIRI',
+    manaus: 'MANAUS',
+    manicore: 'MANICORÉ',
+    maraa: 'MARAÃ',
+    maues: 'MAUÉS',
+    nhamunda: 'NHAMUNDÁ',
+    presfigueiredo: 'PRESIDENTE FIGUEIREDO',
+    riopretodaeva: 'RIO PRETO DA EVA',
+    tabatinga: 'TABATINGA',
+    urucara: 'URUCARÁ'
+  };
+
+  const municipios3 = {
+    amazonprevr: 'GOVERNO DO ESTADO DO AMAZONAS',
+    barcelosr: 'BARCELOS',
+    barreirinhar: 'BARREIRINHA',
+    benjconstantr: 'BENJAMIN CONSTANT',
+    berurir: 'BERURI',
+    borbar: 'BORBA',
+    caapirangar: 'CAAPIRANGA',
+    canutamar: 'CANUTAMA',
+    carauarir: 'CARAUARI',
+    coarir: 'COARI',
+    envirar: 'ENVIRA',
+    fonteboar: 'FONTE BOA',
+    humaitar: 'HUMAITÁ',
+    irandubar: 'IRANDUBA',
+    itacoatiarar: 'ITACOATIARA',
+    labrear: 'LÁBREA',
+    manacapurur: 'MANACAPURU',
+    manaquirir: 'MANAQUIRI',
+    manausr: 'MANAUS',
+    manicorer: 'MANICORÉ',
+    maraar: 'MARAÃ',
+    mauesr: 'MAUÉS',
+    nhamundar: 'NHAMUNDÁ',
+    presfigueiredor: 'PRESIDENTE FIGUEIREDO',
+    riopretodaevar: 'RIO PRETO DA EVA',
+    tabatingar: 'TABATINGA',
+    urucarar: 'URUCARÁ'
+  };
+
+
+document.getElementById('form3').addEventListener('submit', async function (e) {
+  e.preventDefault();
+
+  const sg_uf = 'AM';
+  const no_ente = document.getElementById('no_ente').value.trim();
+  const dt_ano = document.getElementById('dt_ano').value.trim();
+  const resultado = document.getElementById('resultado');
+
+
+  const baseUrl = `http://localhost:3000/proxy/relatorioanual?sg_uf=${encodeURIComponent(sg_uf)}&no_ente=${encodeURIComponent(no_ente)}&dt_ano=${encodeURIComponent(dt_ano)}`;
+  const url = `${baseUrl}`;
+
+  console.log("url front final:", url);
+
+
+  try {
+    console.log("Consultando URL: ", url);
+    const response = await fetch(url);
+
+    const contentType = response.headers.get("content-type");
+    if (!response.ok || !contentType || !contentType.includes("application/json")) {
+      const text = await response.text();
+      console.error("Resposta inválida ou não-JSON:", text);
+      resultado.innerHTML = `Erro do servidor (status ${response.status}): A resposta não é um JSON válido.`;
+      return;
+    }
+
+    const data = await response.json();
+    /*console.log("DATA:", data); mostra todas os vetores da API conforme o que foi buscado no html*/
+    const resultadoData = data?.results?.[0]?.data;
+    console.log("vetores:", resultadoData);
+    const quant = Array.isArray(resultadoData) ? resultadoData.length : 0; /*quantidade de vetores encontrados na API*/
+    console.log("quantidade vetores encontrados:", quant);
+    
+
+    if (!Array.isArray(resultadoData)) {
+      console.warn("Dados inválidos ou não encontrados.");
+      return;
+    }
+/*tabela aplicações*/
+    const municipiosA = [];
+    const valoresAplicacoes =[];
+    const coresAplicacoes = [];
+    // Agrupador de soma por no_ente
+    const somaAplicacaoPorEnte = {};
+    console.log("ENTE", somaAplicacaoPorEnte);
+    let totalAplicacoes = 0;
+
+    for (const item of resultadoData) {
+      const nome = item?.no_ente?.trim();
+      const valor = parseFloat(item?.vl_operacao) || 0;
+      const temQuantidade = parseFloat(item?.vl_quantidade_apos);
+
+      // Se for negativo e tem quantidade, é resgate → não soma
+      if (temQuantidade > 0 ) {
+        if (!somaAplicacaoPorEnte[nome]) {
+          somaAplicacaoPorEnte[nome] = 0;
+          
+        }
+        somaAplicacaoPorEnte[nome] += valor;
+
+        totalAplicacoes ++;
+        
+      }
+    }
+    const divTotalAplicacoes = document.getElementById('soma_aplicacoes');
+    if (divTotalAplicacoes) {
+      divTotalAplicacoes.textContent = somaAplicacaoPorEnte.toString();
+    }
+
+    // Exibir resultados
+    console.log("Soma total das aplicações no ano por município (ignorando resgates):");
+
+    for (const [id, nome] of Object.entries(municipios2)) {
+      const chaveNormalizada = normalizarNome(nome);
+
+      // Encontrar o nome correspondente na somaPorEnte (API)
+      const municipioCorrespondente = Object.keys(somaAplicacaoPorEnte).find(key =>
+        normalizarNome(key) === chaveNormalizada
+      );
+
+      // Se não encontrado, considera 0
+      const total = municipioCorrespondente ? somaAplicacaoPorEnte[municipioCorrespondente] : 0;
+      municipiosA.push(nome);
+      valoresAplicacoes.push(total);
+      coresAplicacoes.push(gerarCorAleatoria());
+
+      const div = document.getElementById(id);
+      if (div) {
+        div.innerHTML = `${nome} <span style="margin-left: 10px; background-color: green">${abreviarValor(total)}</span>`;
+      }
+
+      const el = document.getElementById(`valor-aplicacao-${id}`);
+      if (el) {
+        el.textContent = abreviarValor(total);
+      }
+
+      console.log(`${nome}: ${total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`);
+    }
+    aplicacoesChart.data.labels = municipiosA;
+    aplicacoesChart.data.datasets[0].data = valoresAplicacoes;
+    aplicacoesChart.data.datasets[0].backgroundColor = coresAplicacoes;
+    aplicacoesChart.update();
+/*tabela resgates*/
+const municipiosR = [];
+    const valoresResgates =[];
+    const coresResgates = [];
+
+    const somaResgatesPorEnte = {};
+
+    let totalResgates=0;
+
+    for (const item of resultadoData) {
+      const nome = item?.no_ente?.trim();
+      const valor = parseFloat(item?.vl_operacao) || 0;
+      const quantidadeApos = parseFloat(item?.vl_quantidade_apos);
+
+      console.log("ente soma", somaResgatesPorEnte);
+      console.log("nome:", nome, "valor:", valor, "quantidade apos:", quantidadeApos);
+      // RESGATE = valor negativo E quantidade_apos negativa
+      if (quantidadeApos < 0 ) {
+        if (!somaResgatesPorEnte[nome]) {
+          somaResgatesPorEnte[nome] = 0;
+        }
+        somaResgatesPorEnte[nome] += valor;
+        totalResgates ++;
+      }
+    }
+
+    const divtotalResgates = document.getElementById("n_resgates");
+    if (divtotalResgates)
+    {
+      divtotalResgates.textContent = totalResgates.toString();
+    }
+
+
+    console.log("Soma total das resgates no ano por município (ignorando aplicacões)");
+
+    for (const [id1, nome1] of Object.entries(municipios3)) {
+      const chaveNormalizada = normalizarNome(nome1);
+
+      const municipioCorrespondente = Object.keys(somaResgatesPorEnte).find(key =>
+        normalizarNome(key) === chaveNormalizada
+      );
+
+      const total = municipioCorrespondente ? somaResgatesPorEnte[municipioCorrespondente] : 0;
+      
+      municipiosR.push(nome1);
+      valoresResgates.push(total);
+      coresResgates.push(gerarCorAleatoria());
+
+      const div = document.getElementById(id1);
+      if (div) {
+        div.innerHTML = `${nome1} <span style="margin-left: 10px; background-color: green">${abreviarValor(Math.abs(total))}</span>`;
+      }
+
+      const el = document.getElementById(`valor-resgate-${id1}`);
+      if (el) {
+        el.textContent = abreviarValor(Math.abs(total));
+      }
+
+      console.log(`${nome1} (resgate): ${total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`);
+    }
+    resgatesChartChart.data.labels = municipiosR;
+    resgatesChartChart.data.datasets[0].data = valoresResgates;
+    resgatesChartChart.data.datasets[0].backgroundColor = coresResgates;
+    resgatesChartChart.update();
+
+    /*const primeirotem = resultadoData[0];
+    const valoroperacao = primeirotem.vl_operacao
+    ? Number(primeirotem.vl_operacao).toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL'
+    })
+    : '-'; primeiro vetor com o parametros em reais de valor de oepração*/
+    if (Array.isArray(resultadoData) && resultadoData.length > 0) {
+      const valor_aplicacao = resultadoData[16];
+
+      const valor_aplicacao_reais = valor_aplicacao.vl_operacao
+        ? Number(valor_aplicacao.vl_operacao).toLocaleString('pt-BR', {
+            style: 'currency',
+            currency: 'BRL'
+          })
+        : 'N/A';
+
+      const spanAmazonprev = document.getElementById('valor-aplicacao-amazonprev');
+      if (spanAmazonprev) {
+        spanAmazonprev.textContent = valor_aplicacao_reais; // Corrigido aqui
+      }
+    }
+
+  } catch (err) {
+    console.error('Erro:', err);
+    resultado.textContent = 'Erro ao consultar dados.';
+  }
+});
+
 
 /*graficos e analises*/
 const monthlyData = {
@@ -69,7 +336,7 @@ const meses = ['Jan', 'Fev', 'Mar','Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Ou
             
         });
 const cores = meses.map((_, i) => `hsl(${i * 13}, 70%, 50%)`);
-        // Gráfico de barras 1
+        // Gráfico de barras 1 aplicacoes
         const barCtx1 = document.getElementById('barChart1').getContext('2d');
         new Chart(barCtx1, {
             type: 'bar',
@@ -131,7 +398,7 @@ const cores = meses.map((_, i) => `hsl(${i * 13}, 70%, 50%)`);
                 
         });
 
-        // Gráfico de barras 2
+        // Gráfico de barras 2 resgates
         const barCtx2 = document.getElementById('barChart2').getContext('2d');
         new Chart(barCtx2, {
             type: 'bar',
