@@ -114,31 +114,24 @@ document.getElementById('form3').addEventListener('submit', async function (e) {
     const valoresAplicacoes =[];
     const coresAplicacoes = [];
     // Agrupador de soma por no_ente
-    const somaAplicacaoPorEnte = {};
-    console.log("ENTE", somaAplicacaoPorEnte);
+    const somaTotalAplicacaoEnte = {};
     let totalAplicacoes = 0;
+    let somatotal=0;
 
     for (const item of resultadoData) {
-      const nome = item?.no_ente?.trim();
       const valor = parseFloat(item?.vl_operacao) || 0;
       const temQuantidade = parseFloat(item?.vl_quantidade_apos);
 
-      // Se for negativo e tem quantidade, é resgate → não soma
       if (temQuantidade > 0 ) {
-        if (!somaAplicacaoPorEnte[nome]) {
-          somaAplicacaoPorEnte[nome] = 0;
-          
-        }
-        somaAplicacaoPorEnte[nome] += valor;
-
-        totalAplicacoes ++;
-        
+        somatotal += valor;
+        totalAplicacoes++;
       }
     }
-    const divTotalAplicacoes = document.getElementById('soma_aplicacoes');
-    if (divTotalAplicacoes) {
-      divTotalAplicacoes.textContent = somaAplicacaoPorEnte.toString();
-    }
+      console.log("total", somatotal);
+
+        console.log("ENTE", somaTotalAplicacaoEnte);
+    
+    document.getElementById('soma_aplicacoes').innerText=formatarParaReais(somatotal);
 
     // Exibir resultados
     console.log("Soma total das aplicações no ano por município (ignorando resgates):");
@@ -147,12 +140,12 @@ document.getElementById('form3').addEventListener('submit', async function (e) {
       const chaveNormalizada = normalizarNome(nome);
 
       // Encontrar o nome correspondente na somaPorEnte (API)
-      const municipioCorrespondente = Object.keys(somaAplicacaoPorEnte).find(key =>
+      const municipioCorrespondente = Object.keys(somaTotalAplicacaoEnte).find(key =>
         normalizarNome(key) === chaveNormalizada
       );
 
       // Se não encontrado, considera 0
-      const total = municipioCorrespondente ? somaAplicacaoPorEnte[municipioCorrespondente] : 0;
+      const total = municipioCorrespondente ? somaTotalAplicacaoEnte[municipioCorrespondente] : 0;
       municipiosA.push(nome);
       valoresAplicacoes.push(total);
       coresAplicacoes.push(gerarCorAleatoria());
@@ -169,42 +162,37 @@ document.getElementById('form3').addEventListener('submit', async function (e) {
 
       console.log(`${nome}: ${total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`);
     }
-    aplicacoesChart.data.labels = municipiosA;
-    aplicacoesChart.data.datasets[0].data = valoresAplicacoes;
-    aplicacoesChart.data.datasets[0].backgroundColor = coresAplicacoes;
-    aplicacoesChart.update();
+
 /*tabela resgates*/
-const municipiosR = [];
-    const valoresResgates =[];
-    const coresResgates = [];
-
-    const somaResgatesPorEnte = {};
-
-    let totalResgates=0;
+    const municipiosR = [];
+    let totalResgates = 0;
+    let somatotalResgates=0;
+    const somarPorMes = {};
 
     for (const item of resultadoData) {
-      const nome = item?.no_ente?.trim();
+      const mes = parseFloat (item?.dt_mes);
       const valor = parseFloat(item?.vl_operacao) || 0;
-      const quantidadeApos = parseFloat(item?.vl_quantidade_apos);
+      const temQuantidadeNega = parseFloat(item?.vl_quantidade_apos);
+      console.log("meses", mes);
+      if (temQuantidadeNega > 0 && data) {
+        const mes = new Date(data).getMonth() + 1; // Mês de 1 a 12
 
-      console.log("ente soma", somaResgatesPorEnte);
-      console.log("nome:", nome, "valor:", valor, "quantidade apos:", quantidadeApos);
-      // RESGATE = valor negativo E quantidade_apos negativa
-      if (quantidadeApos < 0 ) {
-        if (!somaResgatesPorEnte[nome]) {
-          somaResgatesPorEnte[nome] = 0;
+        // Formata como "01", "02", ..., "12"
+        const mesFormatado = mes.toString().padStart(2, '0');
+
+        if (!somarPorMes[mesFormatado]) {
+          somarPorMes[mesFormatado] = 0;
         }
-        somaResgatesPorEnte[nome] += valor;
-        totalResgates ++;
+
+        somarPorMes[mesFormatado] += valor;
+        somatotalResgates += valor;
+        totalResgates++;
       }
-    }
-
-    const divtotalResgates = document.getElementById("n_resgates");
-    if (divtotalResgates)
-    {
-      divtotalResgates.textContent = totalResgates.toString();
-    }
-
+  }
+    
+      console.log("total", somatotalResgates);
+    
+    document.getElementById('soma_resgates').innerText=formatarParaReais(somatotalResgates);
 
     console.log("Soma total das resgates no ano por município (ignorando aplicacões)");
 
@@ -233,10 +221,7 @@ const municipiosR = [];
 
       console.log(`${nome1} (resgate): ${total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`);
     }
-    resgatesChartChart.data.labels = municipiosR;
-    resgatesChartChart.data.datasets[0].data = valoresResgates;
-    resgatesChartChart.data.datasets[0].backgroundColor = coresResgates;
-    resgatesChartChart.update();
+
 
     /*const primeirotem = resultadoData[0];
     const valoroperacao = primeirotem.vl_operacao
@@ -459,3 +444,42 @@ const cores = meses.map((_, i) => `hsl(${i * 13}, 70%, 50%)`);
                 this.style.boxShadow = 'none';
             });
         });
+
+function normalizarNome(str) {
+  return str
+  .normalize("NFD") // remove acentos
+  .replace(/[\u0300-\u036f]/g, "") // remove restos dos acentos
+  .replace(/\s+/g, '') // remove espaços
+  .toUpperCase(); // padroniza em caixa alta
+}
+
+function abreviarValor(valor) {
+  const absValor = Math.abs(valor);
+  let abreviado = '';
+
+  if (absValor >= 1_000_000_000) {
+    abreviado = (valor / 1_000_000_000).toFixed(2).replace('.', ',') + 'B';
+  } else if (absValor >= 1_000_000) {
+    abreviado = (valor / 1_000_000).toFixed(2).replace('.', ',') + 'M';
+  } else if (absValor >= 1_000) {
+    abreviado = (valor / 1_000).toFixed(2).replace('.', ',') + 'K';
+  } else {
+    abreviado = valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    return abreviado; // não adiciona "R$" de novo abaixo
+  }
+
+  return `R$ ${abreviado}`;
+}
+
+function gerarCorAleatoria() {
+  const r = Math.floor(Math.random() * 156 + 100); // tons mais claros
+  const g = Math.floor(Math.random() * 156 + 100);
+  const b = Math.floor(Math.random() * 156 + 100);
+  return `rgba(${r}, ${g}, ${b}, 0.7)`;
+}
+function formatarParaReais(valor) {
+  return valor.toLocaleString('pt-BR', {
+    style: 'currency',
+    currency: 'BRL'
+  });
+}

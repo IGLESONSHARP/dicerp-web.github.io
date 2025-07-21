@@ -8,6 +8,36 @@ const municipioscall = [
 
 ];
 
+const mesA = {
+  janA: '1',
+  fevA: '2',
+  marA: '3',
+  abrA: '4',
+  maiA: '5',
+  junA: '6',
+  julA: '7',
+  agoA: '8',
+  setA: '9',
+  outA: '10',
+  novA: '11',
+  dezA: '12'
+};
+
+const mesR = {
+  janR: '1',
+  fevR: '2',
+  marR: '3',
+  abrR: '4',
+  maiR: '5',
+  junR: '6',
+  julR: '7',
+  agoR: '8',
+  setR: '9',
+  outR: '10',
+  novR: '11',
+  dezR: '12'
+};
+
 const municipios2 = {
     amazonprev: 'GOVERNO DO ESTADO DO AMAZONAS',
     barcelos: 'BARCELOS',
